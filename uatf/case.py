@@ -37,6 +37,28 @@ class TestCase:
     def _setup_class_framework(cls):
         """Общие действия перед запуском тестов"""
 
+    def _setup_framework(self, request):
+        """Общие действия перед запуском каждого теста"""
+
+    @pytest.fixture(autouse=True)
+    def _base_setup(self, request, subtests):
+        """base method for call teardown after failed setup"""
+        test = request.node
+        self.test_method_name = test.name
+
+        def teardown():
+            with subtests._test(postfix='teardown', teardown=True):
+                self.tearDown()
+            self._teardown_framework(request, subtests)
+
+        request.addfinalizer(teardown)
+
+        self._setup_framework(request)
+        self.setUp()
+
+    def _teardown_framework(self, request, subtests):
+        """action framework"""
+
     @classmethod
     def _teardown_class_framework(cls):
         """Общие действия перед запуском каждого теста"""

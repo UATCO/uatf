@@ -5,20 +5,20 @@ import pytest
 class TestFirst(TestCase):
     @classmethod
     def setUpClass(cls):
-        print('setUpClass')
+        log('setUpClass')
 
     def setUp(self):
-        print('setUp')
+        log('setUp')
 
     def test_01(self):
-        log('Привет')
+        log('test_01')
         assert 1 == 1
 
     def tearDown(self):
-        print('tearDown')
+        log('tearDown')
 
     @classmethod
     def tearDownClass(cls):
-        print('tearDownClass')
+        log('tearDownClass')
 
 
