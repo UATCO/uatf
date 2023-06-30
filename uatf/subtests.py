@@ -19,7 +19,8 @@ from _pytest.runner import check_interactive_exception
 from .config import Config
 from .logfactory import LOG_FORMATTER
 
-atf_config = Config()
+
+config = Config()
 
 if sys.version_info[:2] < (3, 7):
 
@@ -172,7 +173,7 @@ class SubTests:
                 captured.err = err
 
     def _is_need_run(self, postfix, layout):
-        restarted_tests = atf_config.get('NODE_IDS', 'GENERAL')
+        restarted_tests = config.get('NODE_IDS', 'GENERAL')
         if restarted_tests:  # Если падает весь тест, то нужно запускать все subtests
             postfix = self._get_postfix(postfix, layout, add_counter=False)
             sub_test_name = self.item.nodeid + f'_{postfix}'
@@ -218,8 +219,8 @@ class SubTests:
         if teardown:  # для teardown сохраняем только неуспешные в последний прогон
 
             if not exc_info:
-                if not atf_config.is_last_run \
-                        or f'{self.item.nodeid}_{postfix}' not in atf_config.get('NODE_IDS', 'GENERAL'):
+                if not config.is_last_run \
+                        or f'{self.item.nodeid}_{postfix}' not in config.get('NODE_IDS', 'GENERAL'):
                     return
 
         precise_stop = time.perf_counter()
@@ -251,7 +252,7 @@ class SubTests:
         captured.update_report(teardown_report)
 
         # save to junit xml only last failed run
-        if not exc_info or atf_config.is_last_run or report.skipped:
+        if not exc_info or config.is_last_run or report.skipped:
             with self.suspend_capture_ctx():
                 self.ihook.pytest_runtest_logreport(report=sub_report)
                 self.ihook.pytest_runtest_logreport(report=teardown_report)

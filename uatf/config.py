@@ -20,7 +20,10 @@ DEFAULT_VALUES = {
     'GENERAL': [
         Option("SHOW_CHECK_LOG", False, help='показать логи проверок (уровень сh)'),
         Option("DEBUG", False, help="выводить сообщения уровня DEBUG или нет"),
-
+        Option('RESTART_AFTER_BUILD_MODE', False, action='store_true',
+               help='Перезапускать ли упавшие тесты внутри сборки упавших тестов в конце сборки'),
+        Option('NODE_IDS', [], action="store", type=str, nargs="+",
+               help='Тут будет список всех node_id, pytest subtest не находит'),
     ]
 }
 
@@ -57,4 +60,16 @@ class Config():
     def pycharm_run(self):
         return os.environ.get('PYCHARM_HOSTED') == '1'
 
-Config().read_file()
+    @property
+    def is_last_run(self) -> bool:
+        """Не сохраняем отчеты если перезапуск"""
+
+        return not self.get('RESTART_AFTER_BUILD_MODE', 'GENERAL')
+
+    def get(self, option: str, section: Optional[str] = None):
+        """Возвращает значение опции
+        :param option: имя опции заглавными буквами
+        :param section: имя секции
+        """
+
+        return self.options[section][option]
