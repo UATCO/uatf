@@ -27,20 +27,22 @@ DEFAULT_VALUES = {
     ]
 }
 
-class Config():
+
+class Config:
     """Класс считывающий данные с конфига"""
 
     def __init__(self, path: str = None):
-        # self._path = path
-        self._path = '/Users/artur_gaazov/Documents/uatf/config.ini'
+        self._path = path
         self.options = {}
         self._set_default_values()
+        self._read_file()
 
-    def read_file(self):
+    def _read_file(self):
         """Разбираем config.ini файл"""
 
+        path = os.path.join(os.getcwd(), "config.ini")
         parser = configparser.ConfigParser()
-        _file = open(self._path, 'r')
+        _file = open(path, 'r')
         parser.read_file(_file)
         for section in parser.sections():
             self.options.fromkeys(section.upper(), {})

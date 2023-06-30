@@ -6,9 +6,9 @@ class Browser:
     """Класс для работы с браузером"""
 
     def __init__(self):
-        self.config = Config('/Users/artur_gaazov/Documents/uatf/config.ini').read_file()
+        self.config = Config()
         self.runner = RunBrowser()
-        if self.config['general']['browser'] == 'chrome':
+        if self.config.options['general']['browser'] == 'chrome':
             self.driver = self.runner.run_chrome()
 
     def open(self, url: str):
