@@ -16,8 +16,8 @@ from _pytest.reports import TestReport
 from _pytest.runner import CallInfo
 from _pytest.runner import check_interactive_exception
 
-from .config import Config
-from .logfactory import LOG_FORMATTER
+from ..config import Config
+from ..logfactory import LOG_FORMATTER
 
 
 config = Config()

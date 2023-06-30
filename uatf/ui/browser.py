@@ -1,5 +1,5 @@
-from .config import Config
-from .run_browser import RunBrowser
+from ..config import Config
+from ..ui.run_browser import RunBrowser
 
 
 class Browser:
