@@ -32,7 +32,11 @@ DEFAULT_VALUES = {
         Option('NODE_IDS', [], action="store", type=str, nargs="+",
                help='Тут будет список всех node_id, pytest subtest не находит'),
         Option("SITE", '', type=str, help='Тестируемый сайт'),
-
+        Option("DOWNLOAD_DIR", "", action="store", type=str,
+               help="Корневая папка (локальная) в которой будут создаваться tmp папки для выгрузки файлов"),
+        Option("DOWNLOAD_DIR_BROWSER", "", action="store", type=str,
+               help="Папка в которой будут создаваться tmp папки для выгрузки файлов"),
+        Option("BROWSER_LOG_LEVEL", "SEVERE", type=str, help="Уровень логирования"),
     ]
 }
 
@@ -83,4 +87,15 @@ class Config:
         :param section: имя секции
         """
 
-        return self.options[section][option]
+        if option not in self.options[section]:
+            return None
+        else:
+            return self.options[section][option]
+
+    def set_option(self, name: str, value, section: str,):
+        """Устанавливает значение аттрибута класса
+        .. warning:: метод для служебного использования!
+        """
+        option_name = name.upper()
+        section_name = section.upper()
+        self.options[section_name][option_name] = value

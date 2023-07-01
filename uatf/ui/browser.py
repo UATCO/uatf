@@ -1,3 +1,5 @@
+import os
+import shutil
 import time
 from datetime import datetime
 
@@ -290,3 +292,20 @@ class Browser:
         url = self.current_url
         res = parse.urlparse(url)
         return f'{res.scheme}://{res.netloc}'
+
+    def delete_download_dir(self, make_dir=False):
+        """Удаление папки для скачивания файлов"""
+
+        config = Config()
+        download_dir = config.get('DOWNLOAD_DIR', "GENERAL")
+        if not download_dir:
+            return
+
+        # если её нет, значит мы не создали папку
+        eth_download_dir = config.get('ETH_DOWNLOAD_DIR', "GENERAL")
+        # вторая проверка на всякий пожарный, но такая ситуация невозможна
+        # if (eth_download_dir and download_dir) and (eth_download_dir != download_dir):
+        if eth_download_dir and download_dir:
+            shutil.rmtree(download_dir, True)
+            if make_dir:
+                os.makedirs(download_dir, exist_ok=True)

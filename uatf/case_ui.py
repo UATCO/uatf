@@ -44,4 +44,6 @@ class TestCaseUI(Case):
         """Общие действия после прохода всех тестов"""
 
         log('_teardown_class_framework', '[d]')
+        if cls.config:
+            cls.browser.delete_download_dir(True)
         cls.browser.quite()
