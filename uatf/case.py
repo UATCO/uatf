@@ -3,7 +3,7 @@ from .ui.browser import Browser
 from .ui.run_browser import RunBrowser
 
 
-class TestCase:
+class Case:
     """Класс для создания инстанса с набором тестов"""
 
     driver = RunBrowser().driver
@@ -40,7 +40,7 @@ class TestCase:
 
     @classmethod
     def _setup_class_framework(cls):
-        """Общие действия перед запуском тестов"""
+        """Общие действия перед запуском всех тестов"""
 
     def _setup_framework(self, request):
         """Общие действия перед запуском каждого теста"""
@@ -62,8 +62,8 @@ class TestCase:
         self.setUp()
 
     def _teardown_framework(self, request, subtests):
-        """action framework"""
+        """Общие действия после прохода каждого теста"""
 
     @classmethod
     def _teardown_class_framework(cls):
-        """Общие действия перед запуском каждого теста"""
+        """Общие действия после прохода всех тестов"""

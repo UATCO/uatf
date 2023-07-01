@@ -2,7 +2,14 @@ import configparser
 import os
 from dataclasses import dataclass
 from typing import Any, Optional
+from distutils import util
 
+
+def type_bool(x: str) -> bool:
+    """Проблема с type=bool у аргументов, нужно передавать пустой объект
+    https://stackoverflow.com/questions/15008758/parsing-boolean-values-with-argparse
+    """
+    return bool(util.strtobool(x))
 
 @dataclass
 class Option:
@@ -19,7 +26,7 @@ class Option:
 DEFAULT_VALUES = {
     'GENERAL': [
         Option("SHOW_CHECK_LOG", False, help='показать логи проверок (уровень сh)'),
-        Option("DEBUG", False, help="выводить сообщения уровня DEBUG или нет"),
+        Option("DEBUG", False, type=type_bool, help="выводить сообщения уровня DEBUG или нет"),
         Option('RESTART_AFTER_BUILD_MODE', False, action='store_true',
                help='Перезапускать ли упавшие тесты внутри сборки упавших тестов в конце сборки'),
         Option('NODE_IDS', [], action="store", type=str, nargs="+",

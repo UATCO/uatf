@@ -2,21 +2,21 @@ from uatf import *
 import pytest
 
 
-class TestFirst(TestCase):
+class TestFirst(TestCaseUI):
     @classmethod
     def setUpClass(cls):
-        log('setUpClass')
+        pass
 
     def setUp(self):
-        log('setUp')
+        pass
 
     def test_01(self):
         log('test_01')
         assert 1 == 1
 
     def tearDown(self):
-        log('tearDown')
+        pass
 
     @classmethod
     def tearDownClass(cls):
-        log('tearDownClass')
+        pass

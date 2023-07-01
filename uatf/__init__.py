@@ -1,4 +1,4 @@
 from .ui.browser import Browser
 from .config import Config
-from .case import TestCase
+from .case_ui import TestCaseUI
 from .logfactory import log, info
