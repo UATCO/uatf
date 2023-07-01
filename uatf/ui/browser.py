@@ -1,15 +1,12 @@
 from ..config import Config
-from ..ui.run_browser import RunBrowser
 
 
 class Browser:
     """Класс для работы с браузером"""
 
-    def __init__(self):
+    def __init__(self, driver):
         self.config = Config()
-        self.runner = RunBrowser()
-        if self.config.options['general']['browser'] == 'chrome':
-            self.driver = self.runner.run_chrome()
+        self.driver = driver
 
     def open(self, url: str):
         """Метод для откртытия веб-страницы

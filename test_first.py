@@ -20,5 +20,3 @@ class TestFirst(TestCase):
     @classmethod
     def tearDownClass(cls):
         log('tearDownClass')
-
-

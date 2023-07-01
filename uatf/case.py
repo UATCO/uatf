@@ -1,8 +1,13 @@
 import pytest
+from .ui.browser import Browser
+from .ui.run_browser import RunBrowser
 
 
 class TestCase:
     """Класс для создания инстанса с набором тестов"""
+
+    driver = RunBrowser().driver
+    browser = Browser(driver)
 
     @classmethod
     def setUpClass(cls):
