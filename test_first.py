@@ -1,5 +1,4 @@
 from uatf import *
-import pytest
 
 
 class TestFirst(TestCaseUI):
@@ -8,15 +7,16 @@ class TestFirst(TestCaseUI):
         pass
 
     def setUp(self):
-        pass
+        log('setUp')
 
     def test_01(self):
         log('test_01')
         assert 1 == 1
 
     def tearDown(self):
-        pass
+        log('tearDown')
 
     @classmethod
     def tearDownClass(cls):
-        pass
+        log('tearDownClass')
+
