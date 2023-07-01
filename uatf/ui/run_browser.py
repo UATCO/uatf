@@ -16,5 +16,4 @@ class RunBrowser:
         """Запускаем хром"""
 
         self.driver = webdriver.Chrome()
-        log("BROWSER: Chrome")
-
+        log("BROWSER: Chrome", '[f]')
