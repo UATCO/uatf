@@ -31,6 +31,8 @@ DEFAULT_VALUES = {
                help='Перезапускать ли упавшие тесты внутри сборки упавших тестов в конце сборки'),
         Option('NODE_IDS', [], action="store", type=str, nargs="+",
                help='Тут будет список всех node_id, pytest subtest не находит'),
+        Option("SITE", '', type=str, help='Тестируемый сайт'),
+
     ]
 }
 

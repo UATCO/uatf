@@ -4,11 +4,13 @@ from .case import Case
 from .logfactory import log
 from .ui.run_browser import RunBrowser
 from .ui.browser import Browser
+from .config import Config
 
 
 class TestCaseUI(Case):
     driver: WebDriver = None
     browser = None
+    config = Config()
 
     @classmethod
     def start_browser(cls):
@@ -23,6 +25,7 @@ class TestCaseUI(Case):
 
         log('_setup_class_framework', '[d]')
         cls.start_browser()
+        cls.browser.open(cls.config.get('SITE', 'GENERAL'))
 
     def _setup_framework(self, request):
         """Общие действия перед запуском каждого теста"""
