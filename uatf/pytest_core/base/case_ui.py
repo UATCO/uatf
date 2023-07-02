@@ -1,10 +1,10 @@
 from selenium.webdriver.chrome.webdriver import WebDriver
 
-from .case import Case
-from .logfactory import log
-from .ui.run_browser import RunBrowser
-from .ui.browser import Browser
-from .config import Config
+from ...pytest_core.base.case import Case
+from ...logfactory import log
+from ...ui.run_browser import RunBrowser
+from ...ui.browser import Browser
+from ...config import Config
 
 
 class TestCaseUI(Case):
