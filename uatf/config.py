@@ -38,6 +38,10 @@ DEFAULT_VALUES = {
         Option("DOWNLOAD_DIR_BROWSER", "", action="store", type=str,
                help="Папка в которой будут создаваться tmp папки для выгрузки файлов"),
         Option("BROWSER_LOG_LEVEL", "SEVERE", type=str, help="Уровень логирования"),
+        Option("HEADLESS_MODE", '', action="store", type=str, help="Запуск браузера в режиме headless"),
+        Option("BROWSER_RESOLUTION", "", action="store", type=str, help="Разрешение браузера WxH"),
+        Option("DISABLE_GPU", False, action="store", type=type_bool, help="Отключить GPU для браузера"),
+
     ]
 }
 

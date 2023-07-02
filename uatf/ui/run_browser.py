@@ -1,5 +1,4 @@
 import os
-import shutil
 import tempfile
 
 from selenium import webdriver
@@ -9,6 +8,8 @@ from ..logfactory import log
 
 class RunBrowser:
     """Класс для запуска браузеров"""
+
+    max_headless_resolution = ('1920', '1000')
 
     def __init__(self):
         self.config = Config()
@@ -24,7 +25,56 @@ class RunBrowser:
         options.set_capability('goog:loggingPrefs', logging_prefs)
         self._set_download_dir(options)
 
-        self.driver = webdriver.Chrome()
+        prefs = options.experimental_options.get('prefs')
+
+        custom_pref = {"plugins.plugins_disabled": ["Adobe Flash Player"],
+                       "browser.enable_spellchecking": False,
+                       "safebrowsing.enabled": True,  # xml
+                       'download.prompt_for_download': False,
+                       'download.directory_upgrade': True,
+                       'safebrowsing.disable_download_protection': True}
+
+        local_state = {
+            # chrome flags (@1 - True, @2 False)
+            "browser.enabled_labs_experiments": [
+                # была бага что не в HEADLESS не мог захватить фокус, вроде бы починили уже
+                "calculate-native-win-occlusion@2",
+                # включение по умолчанию запрета на скачивание MixedContent
+                'treat-unsafe-downloads-as-active-content@1'
+            ],
+        }
+
+        if prefs:
+            prefs.update(custom_pref)
+        else:
+            prefs = custom_pref
+
+        options.add_experimental_option('prefs', prefs)
+        options.add_experimental_option('localState', local_state)
+        options.add_experimental_option("excludeSwitches", ["ignore-certificate-errors", '--enable-logging'])
+        options.add_argument("--always-authorize-plugins=true")
+        options.add_argument('--no-sandbox')
+        options.add_argument("--disable-popup-blocking")
+        options.add_argument('--disable-notifications')
+        options.add_argument("--disable-logging")
+        options.add_argument("--start-maximized")
+        options.add_argument("--safebrowsing-disable-download-protection")
+        options.add_argument('--disable-crash-reporter')
+        options.add_argument('--disable-backgrounding-occluded-windows')
+
+        headless_mode = self.config.get('HEADLESS_MODE', 'GENERAL')
+        if headless_mode:
+            resolution = self.config.get('BROWSER_RESOLUTION', 'GENERAL')
+            options.add_argument(f"--headless={headless_mode}")
+            options.add_argument("--lang=ru-RU")
+
+            size = resolution.split('x') if resolution else self.max_headless_resolution
+            options.add_argument("--window-size={},{}".format(*size))
+
+        if self.config.get('DISABLE_GPU', 'GENERAL') or headless_mode:
+            options.add_argument("--disable-gpu")
+
+        self.driver = webdriver.Chrome(chrome_options=options)
         log("BROWSER: Chrome", '[f]')
 
     def _set_download_dir(self, options):
@@ -69,6 +119,8 @@ class RunBrowser:
 
                 # задаем путь для скачивания в браузере
                 if download_dir_browser:
-                    self.config.set_option('DOWNLOAD_DIR_BROWSER', '\\'.join((download_dir_browser, tmp_name)), 'GENERAL')
+                    self.config.set_option('DOWNLOAD_DIR_BROWSER', '\\'.join((download_dir_browser, tmp_name)),
+                                           'GENERAL')
                 else:
-                    self.config.set_option('DOWNLOAD_DIR_BROWSER', self.config.get('DOWNLOAD_DIR', 'GENERAL'), 'GENERAL')
+                    self.config.set_option('DOWNLOAD_DIR_BROWSER', self.config.get('DOWNLOAD_DIR', 'GENERAL'),
+                                           'GENERAL')
