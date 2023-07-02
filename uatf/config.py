@@ -11,6 +11,7 @@ def type_bool(x: str) -> bool:
     """
     return bool(util.strtobool(x))
 
+
 @dataclass
 class Option:
     """Класс для описания опций конфига / командной строки"""
@@ -44,11 +45,20 @@ DEFAULT_VALUES = {
 class Config:
     """Класс считывающий данные с конфига"""
 
-    def __init__(self, path: str = None):
-        self._path = path
-        self.options = {}
-        self._set_default_values()
-        self._read_file()
+    instance = None
+
+    def __new__(cls, *args, **kwargs):  # singleton
+        if not cls.instance:
+            cls.instance = super().__new__(cls)
+        return cls.instance
+
+    def __init__(self, path: str = None, first_init: bool = True):
+        if not hasattr(self, 'first_init'):
+            self._path = path
+            self.first_init = first_init
+            self.options = {}
+            self._set_default_values()
+            self._read_file()
 
     def _read_file(self):
         """Разбираем config.ini файл"""
@@ -92,7 +102,7 @@ class Config:
         else:
             return self.options[section][option]
 
-    def set_option(self, name: str, value, section: str,):
+    def set_option(self, name: str, value, section: str):
         """Устанавливает значение аттрибута класса
         .. warning:: метод для служебного использования!
         """

@@ -14,9 +14,17 @@ from urllib import parse
 class Browser:
     """Класс для работы с браузером"""
 
+    instance = None
+
+    def __new__(cls, *args, **kwargs):  # singleton
+        if not cls.instance:
+            cls.instance = super().__new__(cls)
+        return cls.instance
+
     def __init__(self, driver):
-        self.config = Config()
-        self.driver: WebDriver = driver
+        if not hasattr(self, 'driver'):
+            self.config = Config()
+            self.driver: WebDriver = driver
 
     def open(self, url: str):
         """Метод для откртытия веб-страницы
@@ -296,13 +304,12 @@ class Browser:
     def delete_download_dir(self, make_dir=False):
         """Удаление папки для скачивания файлов"""
 
-        config = Config()
-        download_dir = config.get('DOWNLOAD_DIR', "GENERAL")
+        download_dir = self.config.get('DOWNLOAD_DIR', "GENERAL")
         if not download_dir:
             return
 
         # если её нет, значит мы не создали папку
-        eth_download_dir = config.get('ETH_DOWNLOAD_DIR', "GENERAL")
+        eth_download_dir = self.config.get('ETH_DOWNLOAD_DIR', "GENERAL")
         # вторая проверка на всякий пожарный, но такая ситуация невозможна
         # if (eth_download_dir and download_dir) and (eth_download_dir != download_dir):
         if eth_download_dir and download_dir:
