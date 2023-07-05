@@ -1,3 +1,5 @@
+import time
+
 from selenium.webdriver.chrome.webdriver import WebDriver
 
 from ...pytest_core.base.case import Case
@@ -5,6 +7,7 @@ from ...logfactory import log
 from ...ui.run_browser import RunBrowser
 from ...ui.browser import Browser
 from ...config import Config
+import requests
 
 
 class TestCaseUI(Case):
@@ -25,7 +28,9 @@ class TestCaseUI(Case):
 
         log('_setup_class_framework', '[d]')
         cls.start_browser()
-        cls.browser.open(cls.config.get('SITE', 'GENERAL'))
+        url = cls.config.get('SITE', 'GENERAL')
+        assert cls.check_service(url) is True, 'Сервис недоступен'
+        cls.browser.open(url)
 
     def _setup_framework(self, request):
         """Общие действия перед запуском каждого теста"""
@@ -47,3 +52,20 @@ class TestCaseUI(Case):
         if cls.config:
             cls.browser.delete_download_dir()
         cls.browser.quite()
+
+    @staticmethod
+    def check_service(url):
+        """Проверка доступности сайта
+
+        :param url: адрес сайта
+        """
+        try:
+            response = requests.get(url, verify=Config().get('API_SSL_VERIFY', 'GENERAL'))
+            result = response.status_code < 500
+            log("Сайт (сервис) '%s' доступен. Код ответа: %d %s" %
+                (url, response.status_code, response.text), '[d]')
+        except Exception as err:
+            log(f'Ошибка проверки url: {url}\n' + str(err))
+            result = False
+        return result
+

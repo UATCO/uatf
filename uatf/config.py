@@ -41,6 +41,7 @@ DEFAULT_VALUES = {
         Option("HEADLESS_MODE", '', action="store", type=str, help="Запуск браузера в режиме headless"),
         Option("BROWSER_RESOLUTION", "", action="store", type=str, help="Разрешение браузера WxH"),
         Option("DISABLE_GPU", False, action="store", type=type_bool, help="Отключить GPU для браузера"),
+        Option("WAIT_ELEMENT_LOAD", 20, action="store", type=float, help="время ожидания загрузки элемента"),
 
     ]
 }
