@@ -30,6 +30,7 @@ class Browser:
         """Метод для откртытия веб-страницы
         :param url: ссылка по которой переходим"""
 
+        log(f'Открываем страницу: {url}')
         self.driver.get(url)
 
     def quite(self):

@@ -1,24 +1,21 @@
 from uatf import *
+from pages.yandex import YandexCommonPage
 
 
 class TestFirst(TestCaseUI):
     @classmethod
     def setUpClass(cls):
-        pass
+        cls.page = YandexCommonPage(cls.driver)
 
     def setUp(self):
-        log('setUp')
+        self.page.open()
 
     def test_01(self):
         log('test_01')
         assert 1 == 1
 
     def tearDown(self):
-        log('tearDown')
-
-    @classmethod
-    def tearDownClass(cls):
-        log('tearDownClass')
+        self.browser.close_windows_and_alert()
 
 
 
