@@ -10,4 +10,4 @@ file_report
 dist
 atf.egg-info
 build
-config.ini
+test/config.ini
