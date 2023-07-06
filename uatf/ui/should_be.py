@@ -9,6 +9,13 @@ from ..config import Config
 
 from ..logfactory import log
 
+__all__ = ('Not', 'Options', 'Attribute', 'CssClass', 'ExactTextIgnoringCase', 'TextIgnoringCase', 'TextIgnoringCase',
+           'ExactText', 'ContainsText', 'MatchRegex', 'Displayed', 'Disabled', 'Enabled', 'Readonly', 'Empty', 'Hidden',
+           'Present', 'Visible', 'DisplayedMenu', 'Active', 'CountElements',
+           'CountWindows', 'CountFrames', 'ValidationError', 'Size', 'Coordinates', 'CssProperty', 'Condition',
+           'ValidationErrorMessage', 'UrlExact', 'UrlContains', 'TitleExact',
+           'TitleContains')
+
 
 class Condition:
     """Класс для состояний"""
