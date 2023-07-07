@@ -42,6 +42,8 @@ DEFAULT_VALUES = {
         Option("BROWSER_RESOLUTION", "", action="store", type=str, help="Разрешение браузера WxH"),
         Option("DISABLE_GPU", False, action="store", type=type_bool, help="Отключить GPU для браузера"),
         Option("WAIT_ELEMENT_LOAD", 20, action="store", type=float, help="время ожидания загрузки элемента"),
+        Option("TRUNCATE_ASSERT_LOGS", True, action="store", type=type_bool,
+               help="Указание модуля для выполнения действий"),
 
     ]
 }
