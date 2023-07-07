@@ -13,3 +13,4 @@ class TestFirst(TestCaseUI):
 
     def tearDown(self):
         self.browser.close_windows_and_alert()
+
