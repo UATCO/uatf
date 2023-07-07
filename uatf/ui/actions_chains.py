@@ -3,7 +3,7 @@ from selenium.webdriver import ActionChains
 from ..logfactory import log
 
 
-class ActionChainsATF(object):
+class ActionChainsUATF(object):
     """Класс для реализации различных взаимодействий, таких как клик, пермещение, нажатие клавиш"""
 
     def __init__(self, driver):

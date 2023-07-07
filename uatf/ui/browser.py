@@ -21,8 +21,11 @@ class Browser:
             cls.instance = super().__new__(cls)
         return cls.instance
 
-    def __init__(self, driver):
-        if not hasattr(self, 'driver'):
+    def __init__(self, driver=None):
+        first_init = not hasattr(self, 'driver')
+        if first_init:
+            if not driver:
+                raise ValueError('Browser ни разу не проинициализирован с драйвером')
             self.config = Config()
             self.driver: WebDriver = driver
 
