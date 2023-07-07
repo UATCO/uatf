@@ -9,11 +9,7 @@ class TestFirst(TestCaseUI):
 
     def test_01(self):
         log('test_01')
-        assert_that(1, equal_to(2), 'Числа не равны')
+        assert_that(self.driver.current_url, equal_to('https://dzen.ru/'), 'Ошибка')
 
     def tearDown(self):
         self.browser.close_windows_and_alert()
-
-
-
-

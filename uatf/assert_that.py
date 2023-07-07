@@ -7,7 +7,7 @@ from copy import deepcopy
 from typing import Any, Tuple, Union, Iterable, Callable
 from xml.etree import ElementTree
 
-from . import log
+from .logfactory import log
 from .config import Config
 from .exceptions import ElementException
 
@@ -669,6 +669,7 @@ def is_not(x: Any) -> IsNot:
     """
     return IsNot(wrap_value_or_type(x))
 
+
 def is_(x: Any) -> Is:
     """Сравнение объекта и x
 
@@ -692,6 +693,7 @@ def is_in(sequence: Union[Iterable, Callable]) -> IsIn:
     """
     return IsIn(sequence)
 
+
 def is_in_ignoring_case(sequence: str) -> IsInIgnoringCase:
     """Проверка вхождения объекта в sequence
 
@@ -714,6 +716,7 @@ def is_not_in(sequence: Any) -> IsNotIn:
         assert_that(a, is_not_in(b), 'Текстовое описание ошибки') # не упадет
     """
     return IsNotIn(sequence)
+
 
 def greater_than(obj: Any) -> GreaterThan:
     """item1 > item2
