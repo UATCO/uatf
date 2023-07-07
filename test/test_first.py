@@ -1,7 +1,6 @@
 from uatf import *
 from pages.yandex import YandexCommonPage
 
-
 class TestFirst(TestCaseUI):
     @classmethod
     def setUpClass(cls):
