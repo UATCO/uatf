@@ -2,7 +2,7 @@
 
 
 class UATFBaseException(AssertionError):
-    """Базовое исключение в atf"""
+    """Базовое исключение в uatf"""
 
     def __init__(self, msg, report=None, **kwargs):
         super().__init__(msg)
