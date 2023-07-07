@@ -11,6 +11,11 @@ from . import log
 from .config import Config
 from .exceptions import ElementException
 
+__all__ = ('assert_that', 'instance_of', 'equal_to', 'equal_to_ignoring_case', 'is_not_in', 'and_wait',
+           'not_equal', 'is_not', 'is_', 'is_in', 'is_in_ignoring_case',
+           'less_than', 'less_than_or_equal_to', 'greater_than', 'greater_than_or_equal_to', 'equal_to_xml',
+           'is_in_xml')
+
 config = Config()
 
 
