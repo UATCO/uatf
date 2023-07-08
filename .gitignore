@@ -8,6 +8,5 @@ file_report
 **/test-reports/*.xml
 *.webm
 dist
-atf.egg-info
 build
-test/config.ini
+config.ini

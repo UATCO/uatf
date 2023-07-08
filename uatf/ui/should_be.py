@@ -952,7 +952,7 @@ def _execute(condition: Condition, element, eth_result: bool,
 
 
 CONFIG = Config()
-SAVE_SUCCESSFUL_TEST_VIDEO = CONFIG.get('SCREEN_CAPTURE')
+SAVE_SUCCESSFUL_TEST_VIDEO = CONFIG.get('SCREEN_CAPTURE', 'GENERAL')
 
 
 def highlight_should_be(condition, element, eth_result):
@@ -961,7 +961,7 @@ def highlight_should_be(condition, element, eth_result):
     """
     if SAVE_SUCCESSFUL_TEST_VIDEO == 'all':
         from .browser import Browser
-        from ..screen_capture import DrawableType
+        from ..ui.screen_capture import DrawableType
         if not isinstance(element, Browser):
             condition_name = condition if type(condition) != Not else condition.condition
             action_name = None

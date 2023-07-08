@@ -3,7 +3,7 @@ from selenium.webdriver import ActionChains
 from ..logfactory import log
 
 
-class ActionChainsATF(object):
+class ActionChainsUATF(object):
     """Класс для реализации различных взаимодействий, таких как клик, пермещение, нажатие клавиш"""
 
     def __init__(self, driver):
@@ -208,4 +208,86 @@ class ActionChainsATF(object):
         self.chain.w3c_actions.pointer_action.pause(0.5)
         self.chain.w3c_actions.pointer_action.move_to_location(end_point_x, end_point_y).release()
         self.__logs.append("Сделали свайп по элементу {0}".format(element.name_output()))
+        return self
+
+    def key_down(self, value, element=None):
+        """ Зажать кнопку клавиатуры над элементом или над элементом в фокусе.
+            (Использовать клавиши Control, Alt and Shift)
+
+        :param value - кнопка
+        :param element элемент, над которым зажимаем клавишу
+            Если None, зажимаем над элементом в фокусе
+
+        Пример, комбинации клавиш ctrl+c:
+
+            ActionChains(driver).key_down(Keys.CONTROL).send_keys('c').key_up(Keys.CONTROL).perform()
+
+        """
+
+        if element:
+            name_element = element.name_output()
+            element = element.webelement()
+            self.__logs.append("Кликнула по элементу {0}".format(name_element))
+        else:
+            name_element = "текущим элементом"
+
+        self.chain.key_down(value, element)
+        self.__logs.append("Зажали клавишу над {0}".format(name_element))
+
+        return self
+
+    def move_to_element_with_offset(self, to_element, xoffset, yoffset):
+        """ Переместить курсор мыши на смещение относительно центра элемента
+
+            :param to_element элемент, отномительно которого смещаем
+            :param xoffset смещение по оси X
+            :param yoffset смещение по оси Y
+        """
+
+        self.chain.move_to_element_with_offset(to_element.webelement(), xoffset, yoffset)
+        self.__logs.append("Переместили мышь относительно центра элемента {0} на смещение ({1}, {2})"
+                           .format(to_element.name_output(), xoffset, yoffset))
+        return self
+
+    def move_to_element_corner_with_offset(self, to_element, xoffset, yoffset):
+        """ Переместить курсор мыши на смещение относительно левого верхнего угла элемента
+        * для перехода на selenium 4
+
+            :param to_element элемент, отномительно которого смещаем
+            :param xoffset смещение по оси X
+            :param yoffset смещение по оси Y
+        """
+        el_rect = to_element.rect
+        left_offset = el_rect['width'] / 2
+        top_offset = el_rect['height'] / 2
+        left = -left_offset + (xoffset or 0)
+        top = -top_offset + (yoffset or 0)
+        self.chain.move_to_element_with_offset(to_element.webelement(), xoffset=int(left), yoffset=int(top))
+        self.__logs.append("Переместили мышь относительно верхнего левого угла элемента {0} на смещение ({1}, {2})"
+                           .format(to_element.name_output(), xoffset, yoffset))
+        return self
+
+    def key_up(self, value, element=None):
+        """ Отпустить кнопку клавиатуры над элементом или над элементом в фокусе
+            (Использовать клавиши Control, Alt and Shift)
+
+        :param value - кнопка
+        :param element элемент, над которым отпускаем клавишу
+            Если None, отпускаем над элементом в фокусе
+
+        Пример, комбинации клавиш ctrl+c:
+
+            ActionChains(driver).key_down(Keys.CONTROL).send_keys('c').key_up(Keys.CONTROL).perform()
+
+        """
+
+        if element:
+            name_element = element.name_output()
+            element = element.webelement()
+            self.__logs.append("Кликнула по элементу {0}".format(name_element))
+        else:
+            name_element = "текущим элементом"
+
+        self.chain.key_up(value, element)
+        self.__logs.append("Отпустили клавишу над {0}".format(name_element))
         return self

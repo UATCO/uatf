@@ -1,6 +1,6 @@
 """Универсальные функции для работы фреймворка"""
-
 import time
+from typing import Optional
 
 from .config import Config
 from .logfactory import log
@@ -45,3 +45,19 @@ def _wait(action, wait_time=True, log_msg=False):
         return False
     else:
         return tmp_err
+
+
+class Aggregator:
+    js_errors = []
+
+    @classmethod
+    def add_errors(cls, errors: Optional[list] = None):
+        from .ui.browser import Browser
+        if errors is None:
+            errors = Browser().get_js_error()
+        if errors:
+            cls.js_errors.extend(errors)
+
+    @classmethod
+    def clear(cls):
+        cls.js_errors = []

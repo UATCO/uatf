@@ -44,6 +44,16 @@ DEFAULT_VALUES = {
         Option("WAIT_ELEMENT_LOAD", 20, action="store", type=float, help="время ожидания загрузки элемента"),
         Option("TRUNCATE_ASSERT_LOGS", True, action="store", type=type_bool,
                help="Указание модуля для выполнения действий"),
+        Option("HIGHLIGHT_ACTION", False, type=type_bool,
+               help="подсвечивать или нет элемены при прохождении теста (для наглядности прохождения)"),
+        Option('RESTART_AFTER_BUILD_MODE', False, action='store_true',
+               help='Перезапускать ли упавшие тесты внутри сборки упавших тестов в конце сборки'),
+        Option('RERUN', False, action='store_true',
+               help='Если это перезапуск упавших тестов внутри RESTART_AFTER_BUILD_MODE'),
+        Option("DELAY_ACTION", 0, type=int,
+               help="время задержки перед действием с элементом (для наглядности прохождения теста)"),
+        Option("SCREEN_CAPTURE", "", action="store", type=str, help="Генерировать видео/gif"),  # gif/video/all
+        Option("WAIT_SHOULD_BE_TIME", 5, type=float, help="время ожидания should_be"),
 
     ]
 }
