@@ -31,7 +31,7 @@ class BaseCaseUI(TestCase):
         if not cls.config.device_name:
             raise ValueError('Не задан BROWSER/OS в config')
 
-        if cls.config.get('DO_NOT_RESTART'):
+        if cls.config.get('DO_NOT_RESTART', 'GENERAL'):
             cls.start_browser()
 
     def _setup_framework(self, request):
@@ -39,9 +39,6 @@ class BaseCaseUI(TestCase):
 
         log('_setup.start', '[d]')
         super()._setup_framework(request)
-
-        if not self.config.get('DO_NOT_RESTART', 'GENERAL'):
-            self.start_browser()
 
         if not self.driver:
             raise ValueError('Не смогли запустить BROWSER/APP')

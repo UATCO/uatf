@@ -22,6 +22,7 @@ class TestCaseUI(BaseCaseUI):
         """Общие действия перед запуском всех тестов"""
 
         log('_setup_class_framework', '[d]')
+        super()._setup_class_framework()
         cls.start_browser()
         url = cls.config.get('SITE', 'GENERAL')
         assert cls.check_service(url) is True, 'Сервис недоступен'
@@ -87,6 +88,7 @@ class TestCaseUI(BaseCaseUI):
         """Общие действия после прохода всех тестов"""
 
         log('_teardown_class_framework', '[d]')
+        super()._teardown_class_framework()
         if cls.config:
             Browser().delete_download_dir()
             if cls.driver and cls.config.get('DO_NOT_RESTART', 'GENERAL'):

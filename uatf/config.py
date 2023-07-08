@@ -83,7 +83,7 @@ class Config:
             self.options = {}
             self._set_default_values()
             self._read_file()
-            self.divice_name = self.get('BROWSER', 'GENERAL')
+            self.device_name = self.get('BROWSER', 'GENERAL')
 
     def _read_file(self):
         """Разбираем config.ini файл"""
