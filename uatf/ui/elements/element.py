@@ -17,6 +17,9 @@ from selenium.webdriver.common.utils import keys_to_typing
 
 from ...helper import _wait
 
+__all__ = ['Element', 'BaseElement']
+
+
 CONFIG = Config()
 HIGHLIGHT = CONFIG.get('HIGHLIGHT_ACTION', 'GENERAL')
 LAST_RUN = not CONFIG.get('RESTART_AFTER_BUILD_MODE', 'GENERAL')
