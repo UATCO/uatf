@@ -673,7 +673,7 @@ class Element(BaseElement):
         :param type_of_action: Тип подсвечиваемого действия
         :param args: Аргументы действия (например, для ввода текста - сам текст)
         """
-        from ...screen_capture import make_screen_for_gif
+        from ...ui.screen_capture import make_screen_for_gif
         try:
             self.driver.execute_script(
                 "function setProperty(element, color) {element.style.outline = color};"

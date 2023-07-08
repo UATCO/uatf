@@ -58,7 +58,7 @@ def before_after(f: Callable) -> Any:
             :param kwargs: словарь параметров метода f
             """
             if HIGHLIGHT or RECORD_VIDEO:
-                from ...screen_capture import DrawableType
+                from ...ui.screen_capture import DrawableType
                 highlight_action = getattr(args[0], 'highlight_action', None)
                 if highlight_action:
                     highlight_action(type_of_action=DrawableType(f.__name__), args=args)
