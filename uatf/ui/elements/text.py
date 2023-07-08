@@ -1,4 +1,4 @@
-from ...ui import Element
+from ...ui.elements.element import Element
 
 
 class Text(Element):

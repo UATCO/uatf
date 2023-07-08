@@ -11,7 +11,7 @@ from .base_element import BaseElement
 from ..find_elements import FindElements, convert_to_css
 from ...helper import _wait
 from ...ui.helper import ListIterator
-from ...ui import Element
+from ...ui.elements.element import Element
 
 ElementType = TypeVar('ElementType', bound=Element)
 

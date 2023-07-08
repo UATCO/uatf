@@ -11,6 +11,7 @@ class TestFirst(TestCaseUI):
 
         log('Проверяем открытие корзины')
         self.main_page.check_basket_displayed()
+        self.main_page.select_upper_tab('Скидочки')
 
     def tearDown(self):
         self.browser.close_windows_and_alert()

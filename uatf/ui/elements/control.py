@@ -1,5 +1,5 @@
-from uatf.ui import Element
-from uatf.ui.elements.base_control import BaseControl
+from ...ui.elements.element import Element
+from ...ui.elements.base_control import BaseControl
 
 
 class Control(BaseControl, Element):
