@@ -10,6 +10,34 @@ class Status:
     SKIPPED_JC = 5
 
 
+def pytest_runtest_protocol(item, nextitem):
+    """
+    Run the test protocol.
+    Note: when teardown fails, two reports are generated for the case, one for
+    the test case and the other for the teardown error.
+    """
+    from _pytest.runner import runtestprotocol
+    from ..config import Config
+
+    config = Config()
+
+    if config.is_last_run:
+        item.ihook.pytest_runtest_logstart(nodeid=item.nodeid, location=item.location)
+        reports = runtestprotocol(item, nextitem=nextitem, log=False)
+        is_save = True
+    else:  # чтобы в junit вообще ничего не попадало если тесты перезапускаем в сборке
+        reports = runtestprotocol(item, nextitem=nextitem, log=False)
+        is_save = all(not r.failed for r in reports)
+        if is_save:
+            item.ihook.pytest_runtest_logstart(nodeid=item.nodeid, location=item.location)
+
+    if is_save:
+        for report in reports:  # 3 reports: setup, call, teardown
+            item.ihook.pytest_runtest_logreport(report=report)
+        item.ihook.pytest_runtest_logfinish(nodeid=item.nodeid, location=item.location)
+    return True
+
+
 def check_success_status(status):
     return status in (Status.SKIPPED, Status.PASSED, Status.FLAKY)
 
