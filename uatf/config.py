@@ -54,8 +54,15 @@ DEFAULT_VALUES = {
                help="время задержки перед действием с элементом (для наглядности прохождения теста)"),
         Option("SCREEN_CAPTURE", "", action="store", type=str, help="Генерировать видео/gif"),  # gif/video/all
         Option("WAIT_SHOULD_BE_TIME", 5, type=float, help="время ожидания should_be"),
+        Option("DO_NOT_RESTART", False, type=type_bool, help="Перезапускать браузер или нет"),
+        Option("SOFT_RESTART", True, type=type_bool, help="Не убивает браузер, а и удаляет все куки"),
+        Option("CLEAR_DOWNLOAD_DIR", True, help='очищать ли папку для скачивания после каждого теста в teardown'),
 
+    ],
+    'REGRESSION': [
+        Option('COVERAGE', False, action='store', type=type_bool, help='Собирать покрытие JS'),
     ]
+
 }
 
 
@@ -76,6 +83,7 @@ class Config:
             self.options = {}
             self._set_default_values()
             self._read_file()
+            self.divice_name = self.get('BROWSER', 'GENERAL')
 
     def _read_file(self):
         """Разбираем config.ini файл"""

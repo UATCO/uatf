@@ -1,19 +1,14 @@
-import time
+import os
 
-from selenium.webdriver.chrome.webdriver import WebDriver
+from selenium.common import UnexpectedAlertPresentException
 
-from ...pytest_core.base.case import Case
+from .base_case_ui import BaseCaseUI
 from ...logfactory import log
 from ...ui.run_browser import RunBrowser
 from ...ui.browser import Browser
-from ...config import Config
-import requests
 
 
-class TestCaseUI(Case):
-    driver: WebDriver = None
-    browser = None
-    config = Config()
+class TestCaseUI(BaseCaseUI):
 
     @classmethod
     def start_browser(cls):
@@ -35,14 +30,57 @@ class TestCaseUI(Case):
     def _setup_framework(self, request):
         """Общие действия перед запуском каждого теста"""
 
+        log('_setup.start', '[d]')
         super()._setup_framework(request)
-        log('_setup_framework', '[d]')
+
+        try:
+            _ = self.driver.current_url
+        except UnexpectedAlertPresentException:
+            self.browser.close_alert()
+
+        try:
+            full_test_name = self.config.get('ATF_TEST_NAME', 'GENERAL')
+            self.browser.add_cookie('autotest', full_test_name)
+        except Exception as err:
+            log(f'Не смогли выставить тестовую куку\n{err}', '[d]')
+
+        if self.browser:
+            self.browser.flush_js_error()
+
+        log('_setup.end', '[d]')
 
     def _teardown_framework(self, request, subtests):
         """Общие действия после прохода каждого теста"""
 
         super()._teardown_framework(request, subtests)
-        log('_teardown_framework', '[d]')
+
+        if self.config.get('COVERAGE', 'REGRESSION') or self.config.get('BROWSER_CHROME_COVERAGE', 'GENERAL'):
+            report = getattr(request.node, 'report', None)
+            if report is not None:
+                from ..plugin import check_success_status
+                if self.config.is_last_run or check_success_status(report.status):
+                    file_name = os.path.basename(request.module.__file__)
+                    self.browser.collect_js_coverage(file_name, self.name_class, self.test_method_name)
+
+        if self.config.get('CHECK_JS_ERROR', "GENERAL"):
+            if self.config.get('BROWSER', 'GENERAL'):
+                errors = self.browser.get_js_error()
+                if errors:
+                    with subtests._test('teardown_js_errors', teardown=True):
+                        str_errors = "\n".join(errors)
+                        assert len(errors) == 0, f'Найдены js ошибки в консоли:\n{str_errors}'
+            else:
+                log("Проверка консоли возможно только в Google Chrome")
+
+        if not self.config.get('DO_NOT_RESTART', 'GENERAL'):
+            self.browser.delete_download_dir()
+            if self.browser:  # если не инициализировался браузер то он будет None
+                self.browser.quit()
+        elif self.config.get('DO_NOT_RESTART', 'GENERAL') and self.config.get('SOFT_RESTART', 'GENERAL'):
+            self.browser.soft_restart()
+
+        if self.config.get('DO_NOT_RESTART', 'GENERAL') and self.config.get('CLEAR_DOWNLOAD_DIR', 'GENERAL'):
+            self.browser.delete_download_dir(True)
 
     @classmethod
     def _teardown_class_framework(cls):
@@ -50,22 +88,6 @@ class TestCaseUI(Case):
 
         log('_teardown_class_framework', '[d]')
         if cls.config:
-            cls.browser.delete_download_dir()
-        cls.browser.quite()
-
-    @staticmethod
-    def check_service(url):
-        """Проверка доступности сайта
-
-        :param url: адрес сайта
-        """
-        try:
-            response = requests.get(url, verify=Config().get('API_SSL_VERIFY', 'GENERAL'))
-            result = response.status_code < 500
-            log("Сайт (сервис) '%s' доступен. Код ответа: %d %s" %
-                (url, response.status_code, response.text), '[d]')
-        except Exception as err:
-            log(f'Ошибка проверки url: {url}\n' + str(err))
-            result = False
-        return result
-
+            Browser().delete_download_dir()
+            if cls.driver and cls.config.get('DO_NOT_RESTART', 'GENERAL'):
+                cls.browser.quit()

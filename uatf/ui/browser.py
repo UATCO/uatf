@@ -1,7 +1,9 @@
+import json
 import os
 import shutil
 import time
 from datetime import datetime
+from typing import Optional
 
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.common.exceptions import NoAlertPresentException, NoSuchWindowException
@@ -36,7 +38,7 @@ class Browser:
         log(f'Открываем страницу: {url}')
         self.driver.get(url)
 
-    def quite(self):
+    def quit(self):
         """Закрываем браузер"""
 
         self.driver.quit()
@@ -320,3 +322,35 @@ class Browser:
             shutil.rmtree(download_dir, True)
             if make_dir:
                 os.makedirs(download_dir, exist_ok=True)
+
+    def collect_js_coverage(self, file_name, suite_name, test_name):
+        """Собираем покрытие JS"""
+
+        coverage_dir = os.path.join(os.getcwd(), 'coverage')
+        folder = os.path.join(coverage_dir, file_name, suite_name)
+        if not os.path.exists(folder):
+            os.makedirs(folder)
+
+        # покрытие собирается через Хром
+        if self.config.get('BROWSER_CHROME_COVERAGE', 'GENERAL'):
+            coverage = self.__send_cdp_cmd('Profiler.takePreciseCoverage')
+            resources = sorted(set([item['url'] for item in coverage['result'] if item['url']]))
+            data = json.dumps(resources)
+        else:  # для снятия покрытия через istanbul
+            data = self.execute_script("""return JSON.stringify(window.__coverage__)""")
+        if data:
+            file_name = '{}-coverage.json'.format(test_name)
+            with open(os.path.join(folder, file_name), 'w', encoding='utf-8') as f:
+                f.write(data)
+
+    def __send_cdp_cmd(self, cmd, params: Optional[dict] = None):
+        """Выполнение cdp комманды https://github.com/SeleniumHQ/selenium/issues/8672"""
+
+        if params is None:
+            params = dict()
+
+        resource = f"/session/{self.driver.session_id}/chromium/send_command_and_get_result"
+        url = self.driver.command_executor._url + resource
+        body = json.dumps({'cmd': cmd, 'params': params})
+        response = self.driver.command_executor._request('POST', url, body)
+        return response.get('value')
