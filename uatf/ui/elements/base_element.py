@@ -15,6 +15,9 @@ from ...config import Config
 from ...exceptions import ElementException
 from ...helper import Aggregator, _wait
 
+__all__ = ['BaseElement', 'before_after']
+
+
 CONFIG = Config()
 HIGHLIGHT = CONFIG.get('HIGHLIGHT_ACTION', 'GENERAL')
 LAST_RUN = not CONFIG.get('RESTART_AFTER_BUILD_MODE', 'GENERAL')

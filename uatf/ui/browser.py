@@ -173,7 +173,7 @@ class Browser:
     def delete_all_cookies(self):
         """Удаление всех cookies браузера"""
 
-        stands = ('online', 'reg', 'inside', 'my', 'n.sbis.ru')
+        stands = ()
         parsed_url = parse.urlparse(self.current_url)
         if list(filter(lambda x: x in parsed_url.netloc, stands)):  # на тестовых стендах переходим на auth
             self.driver.get('%s://%s/ver.html' % (parsed_url.scheme, parsed_url.netloc))

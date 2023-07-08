@@ -7,6 +7,8 @@ from .find_elements import FindElements
 from .browser import Browser
 from selenium.webdriver.common.by import By
 
+__all__ = ['Region', 'parent_element', 'BaseRegion']
+
 
 class BaseRegion:
     """Базовый класс для страниц и групп элементов (псевдо-окон, форм, etc.)"""
