@@ -952,7 +952,7 @@ def _execute(condition: Condition, element, eth_result: bool,
 
 
 CONFIG = Config()
-SAVE_SUCCESSFUL_TEST_VIDEO = CONFIG.get('SCREEN_CAPTURE')
+SAVE_SUCCESSFUL_TEST_VIDEO = CONFIG.get('SCREEN_CAPTURE', 'GENERAL')
 
 
 def highlight_should_be(condition, element, eth_result):

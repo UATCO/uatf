@@ -10,7 +10,7 @@ from selenium.webdriver.common.by import By
 
 from ..find_elements import FindElements
 from ..should_be import Condition, should_framework
-from ... import log
+from ...logfactory import log
 from ...config import Config
 from ...exceptions import ElementException
 from ...helper import Aggregator, _wait

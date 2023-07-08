@@ -51,7 +51,7 @@ class BaseRegion:
         for key, cur_value, is_my in self.get_elements():
             if isinstance(cur_value, BaseElement):
                 try:
-                    setattr(self, key, cur_value.new_instance(self.driver, region=self, name=key))
+                    setattr(self, key, cur_value.new_instance(self.driver, region=self))
                 except Exception as error:
                     raise type(error)(f'Не смогли создать копию элемента\n'
                                       f'key: {key}\n'

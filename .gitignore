@@ -9,4 +9,4 @@ file_report
 *.webm
 dist
 build
-test/config.ini
+config.ini

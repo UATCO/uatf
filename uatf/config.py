@@ -53,6 +53,7 @@ DEFAULT_VALUES = {
         Option("DELAY_ACTION", 0, type=int,
                help="время задержки перед действием с элементом (для наглядности прохождения теста)"),
         Option("SCREEN_CAPTURE", "", action="store", type=str, help="Генерировать видео/gif"),  # gif/video/all
+        Option("WAIT_SHOULD_BE_TIME", 5, type=float, help="время ожидания should_be"),
 
     ]
 }
