@@ -1,5 +1,4 @@
 """Универсальные функции для работы фреймворка"""
-
 import time
 from typing import Optional
 
