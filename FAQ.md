@@ -8,3 +8,8 @@
 
 2) Меняем testing tools на pytest <br>
 Settings - Tools - Python integrated Tools - Default test runner: pytest
+
+## Не запускаются по порядку тесты (фейлятся после первого прогона): <br>
+Запускать со следующими параметрами в config.ini: <br>
+DO_NOT_RESTART = True <br>
+SOFT_RESTART = False <br>

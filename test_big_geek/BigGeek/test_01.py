@@ -1,6 +1,7 @@
 from uatf import *
 from uatf.ui import *
 
+
 class Test(TestCaseUI):
 
     def setUp(self):

@@ -23,7 +23,6 @@ class TestCaseUI(BaseCaseUI):
 
         log('_setup_class_framework', '[d]')
         super()._setup_class_framework()
-        cls.start_browser()
         url = cls.config.get('SITE', 'GENERAL')
         assert cls.check_service(url) is True, 'Сервис недоступен'
         cls.browser.open(url)
