@@ -10,7 +10,6 @@ class TestBrowser(TestCaseUI):
         cls.config.WAIT_ELEMENT_LOAD = 1
 
     def test_execute_script(self):
-        self.browser.open('data:,')
         try:
             self.browser.execute_script('$("div")')
             pytest.fail('Должно вызваться исключение')

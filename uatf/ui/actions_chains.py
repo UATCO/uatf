@@ -291,3 +291,14 @@ class ActionChainsUATF(object):
         self.chain.key_up(value, element)
         self.__logs.append("Отпустили клавишу над {0}".format(name_element))
         return self
+
+    def move_by_offset(self, xoffset, yoffset):
+        """ Переместить курсор мыши на заданное смещение
+            :param xoffset смещение по оси X
+            :param yoffset смещение по оси Y
+        """
+
+        self.chain.move_by_offset(xoffset, yoffset)
+        self.__logs.append("Переместили курсор мыши на смещение ({0}, {1})".format(xoffset, yoffset))
+
+        return self

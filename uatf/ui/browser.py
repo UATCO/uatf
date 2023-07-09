@@ -30,6 +30,11 @@ class Browser:
                 raise ValueError('Browser ни разу не проинициализирован с драйвером')
             self.config = Config()
             self.driver: WebDriver = driver
+            self.actions = None
+        if first_init or (driver and self.driver != driver):
+            self.driver = driver
+            from ..ui.actions_chains import ActionChainsUATF
+            self.actions = ActionChainsUATF(self.driver)
 
     def open(self, url: str):
         """Метод для откртытия веб-страницы
@@ -354,3 +359,11 @@ class Browser:
         body = json.dumps({'cmd': cmd, 'params': params})
         response = self.driver.command_executor._request('POST', url, body)
         return response.get('value')
+
+    def move_cursor_by_offset(self, x, y):
+        """Перемещает курсор на координаты, относительно текущиего положения
+        :param x Положительное/отрицательное целое число
+        :param y Положительное/отрицательное целое число
+        """
+        
+        self.actions.move_by_offset(x, y).perform()
