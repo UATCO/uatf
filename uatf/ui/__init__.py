@@ -4,10 +4,11 @@ from selenium.webdriver.common.keys import Keys
 from .elements import *
 from .should_be import *
 from .asserts_matchers_ui import *
+from .region import *
 
 
 __all__ = (
-    'Keys', 'By',
+    'Keys', 'By', 'parent_element',
     # should_be
     'Not', 'Options', 'Attribute', 'CssClass', 'ExactTextIgnoringCase', 'TextIgnoringCase', 'TextIgnoringCase',
     'ExactText', 'ContainsText', 'MatchRegex', 'Displayed', 'Disabled', 'Enabled', 'Readonly', 'Empty', 'Hidden',

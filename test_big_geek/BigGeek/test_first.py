@@ -1,6 +1,6 @@
 from uatf import *
-from test.BigGeek.pages.BigGeek import BigGeekMain
-from test.BigGeek.pages.discounds import Discounts
+from test_big_geek.BigGeek.pages.BigGeek import BigGeekMain
+from test_big_geek.BigGeek.pages.discounds import Discounts
 
 
 class TestFirst(TestCaseUI):
