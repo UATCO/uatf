@@ -23,6 +23,16 @@ class RunBrowser:
         options = webdriver.ChromeOptions()
         logging_prefs = {'browser': self.config.get('BROWSER_LOG_LEVEL', 'GENERAL')}
         options.set_capability('goog:loggingPrefs', logging_prefs)
+
+        if self.config.GENERAL.get('CHROME_MOBILE_EMULATION'):
+            chrome_mobile_emulation = self.config.GENERAL.get('CHROME_MOBILE_EMULATION')
+            devices = ('iPad Mini', 'iPhone SE', 'iPhone X', 'iPhone XR', 'Pixel 5', 'Galaxy Tab S4')
+            if chrome_mobile_emulation not in devices:
+                raise ValueError(f"Выбрано неверное устройство {chrome_mobile_emulation}, " 
+                                 f"список поддерживаемых устройств:\n{chr(10).join(devices)}")
+            mobile_emulation = {"deviceName": chrome_mobile_emulation}
+            options.add_experimental_option('mobileEmulation', mobile_emulation)
+
         self._set_download_dir(options)
 
         prefs = options.experimental_options.get('prefs')

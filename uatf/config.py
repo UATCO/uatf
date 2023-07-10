@@ -57,6 +57,7 @@ DEFAULT_VALUES = {
         Option("DO_NOT_RESTART", False, type=type_bool, help="Перезапускать браузер или нет"),
         Option("SOFT_RESTART", True, type=type_bool, help="Не убивает браузер, а и удаляет все куки"),
         Option("CLEAR_DOWNLOAD_DIR", True, help='очищать ли папку для скачивания после каждого теста в teardown'),
+        Option("CHROME_MOBILE_EMULATION", "", type=str, help="Название устройства для эмуляции"),
 
     ],
     'REGRESSION': [

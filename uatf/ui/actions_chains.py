@@ -1,6 +1,9 @@
 from ..config import Config
 from selenium.webdriver import ActionChains
 from ..logfactory import log
+from selenium.webdriver.common.actions.action_builder import ActionBuilder
+from selenium.webdriver.common.actions.pointer_input import PointerInput
+from selenium.webdriver.common.actions import interaction
 
 
 class ActionChainsUATF(object):
@@ -12,6 +15,8 @@ class ActionChainsUATF(object):
         self.config = Config()
         self.chain = ActionChains(self.driver)
         self.__logs = []
+        if self.config.GENERAL.get("CHROME_MOBILE_EMULATION"):
+            self.chain.w3c_actions = ActionBuilder(self.driver, mouse=PointerInput(interaction.POINTER_TOUCH, "touch"))
 
     def reset_action(self):
         """Clear all stored actions."""
