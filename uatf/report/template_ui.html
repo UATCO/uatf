@@ -2,23 +2,32 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Great Books of All Time</title>
+    <link href="template_ui.css" rel="stylesheet" type="text/css">
+    <title>Отчет прохождения сборки</title>
 </head>
 <body>
-    <div class="container">
-        <h1>Great Books of All Time</h1>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col">Test file</th>
-                    <th scope="col">Suite name</th>
-                    <th scope="col">Test name</th>
-                </tr>
-            </thead>
-            <tbody>
-                ${test_file}, ${suite_name}, ${test_name}
-            </tbody>
-        </table>
-    </div>
+<div>
+    <h1>Отчет прохождения сборки:</h1>
+    <table border="1">
+        <tr>
+            <th>Название файла.</th>
+            <th>Название сьюта.</th>
+            <th>Название теста.</th>
+            <th>Статус.</th>
+            <th>Времея начала.</th>
+            <th>Время конца.</th>
+            <th>Лог ошибки.</th>
+        <tr>
+        <tr>
+            <td>${file_name}</td>
+            <td>${suite_name}</td>
+            <td>${test_name}</td>
+            <td>${status}</td>
+            <td>${start_time}</td>
+            <td>${stop_time}</td>
+        <td><pre>${std_out}</pre></td>
+        </tr>
+    </table>
+</div>
 </body>
 </html>

@@ -17,6 +17,9 @@ class ReportUI:
         self.start_time = start_time
         self.stop_time = stop_time
 
-        final_output = template.substitute(test_file=self.file_name, suite_name=self.suite_name, test_name=self.test_name)
-        with open("report.html", "w") as output:
+        final_output = template.safe_substitute(file_name=self.file_name, suite_name=self.suite_name,
+                                                test_name=self.test_name, status=self.status,
+                                                start_time=self.start_time, stop_time=self.stop_time,
+                                                std_out=self.std_out)
+        with open("report.html", "a") as output:
             output.write(final_output)
