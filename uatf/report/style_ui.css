@@ -10,3 +10,7 @@ td {
 .status-passed {
     background-color: green;
 }
+
+.std_out {
+    text-align: left;
+}

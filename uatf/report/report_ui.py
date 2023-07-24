@@ -44,7 +44,7 @@ class ReportUI:
             <td class={'"status-failed"' if status == 'failed' else '"status-passed"'}>{status}</td>
             <td>{start_time}</td>
             <td>{stop_time}</td>
-            <td><pre>{std_out}</pre></td>
+            <td class="std_out"><pre>{std_out}</pre></td>
         </tr>\n"""
 
         final_output = template.safe_substitute(content=content)
