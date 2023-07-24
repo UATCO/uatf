@@ -32,17 +32,19 @@ class ReportUI:
                             self.stop_time, self.std_out)
 
     def create_report(self):
+        """Создаем html-отчет"""
         content = ''
         rs = bd.get_test_results()
         for (file_name, suite_name, test_name, status, start_time, stop_time, std_out) in rs:
-            content = content + f"""        <tr>
+            content = content + f"""
+        <tr>
             <td>{file_name}</td>
             <td>{suite_name}</td>
             <td>{test_name}</td>
             <td class={'"status-failed"' if status == 'failed' else '"status-passed"'}>{status}</td>
             <td>{start_time}</td>
             <td>{stop_time}</td>
-        <td><pre>{std_out}</pre></td>
+            <td><pre>{std_out}</pre></td>
         </tr>\n"""
 
         final_output = template.safe_substitute(content=content)
