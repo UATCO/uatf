@@ -5,7 +5,7 @@ from uatf.ui import *
 class MainPage(Region):
     """Главная страница"""
 
-    basket = Button(By.CLASS_NAME, 'user-header-middle__link--cart', 'Корзина')
+    basket = Button(By.CLASS_NAME, 'header-middle__link', 'Корзина')
     auth_btn = Button(By.CLASS_NAME, 'login-modal-singin', 'Войти')
     account_btn = Button(By.CLASS_NAME, 'user-header-middle__link--account', 'Личный кабинет')
 

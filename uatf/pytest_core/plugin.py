@@ -1,4 +1,10 @@
+from datetime import datetime
+
 from _pytest.config.argparsing import Parser
+import pytest
+from _pytest.reports import TestReport
+from _pytest.runner import CallInfo
+from ..report.report_ui import ReportUI
 
 
 class Status:
@@ -50,3 +56,16 @@ def pytest_addoption(parser: Parser):
     parser.addini('log_cli', help='', type='bool', default=True)
     parser.addini('log_cli_format', help='', type='string', default="%(asctime)s.%(msecs).03d %(message)s")
     parser.addini('log_cli_date_format', help='', type='string', default="%d.%m.%y %H:%M:%S")
+
+
+@pytest.hookimpl(tryfirst=True, hookwrapper=True)
+def pytest_runtest_makereport(item: pytest.Item, call: CallInfo[None]):
+    outcome = yield
+    report: TestReport = outcome.get_result()
+
+    if report.when == 'call':
+        start_time = datetime.fromtimestamp(call.start).strftime('%d.%m.%y %H:%M:%S')
+        stop_time = datetime.fromtimestamp(call.stop).strftime('%d.%m.%y %H:%M:%S')
+        ReportUI(file_name=item.parent.parent.name, suite_name=item.parent.name, test_name=item.name,
+                 status=report.outcome, std_out=report.longrepr, start_time=start_time, stop_time=stop_time)
+
