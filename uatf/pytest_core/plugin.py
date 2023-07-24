@@ -65,6 +65,7 @@ def pytest_runtest_makereport(item: pytest.Item, call: CallInfo[None]):
     report: TestReport = outcome.get_result()
 
     if report.when == 'call':
+
         log('Создаем отчет прохождения теста')
         start_time = datetime.fromtimestamp(call.start).strftime('%d.%m.%y %H:%M:%S')
         stop_time = datetime.fromtimestamp(call.stop).strftime('%d.%m.%y %H:%M:%S')

@@ -19,6 +19,10 @@ class TestCase:
         log('{0}_setup_class framework{0}'.format('=' * 10), '[d]')
         url = cls.config.get('SITE', 'GENERAL')
         assert cls.check_service(url) is True, 'Сервис недоступен'
+
+        from ...report.bd_model import ResultBD
+        ResultBD().setup()
+
         log('_general_setup_class.end', '[d]')
 
     @classmethod

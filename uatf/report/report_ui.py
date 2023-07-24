@@ -1,5 +1,9 @@
+import os
 import string
+import sqlite3
+from .bd_model import ResultBD
 
+bd = ResultBD()
 with open("/Users/artur_gaazov/Documents/uatf/uatf/report/template_ui.html") as tpl:
     template = string.Template(tpl.read())
 
@@ -17,9 +21,12 @@ class ReportUI:
         self.start_time = start_time
         self.stop_time = stop_time
 
-        final_output = template.safe_substitute(file_name=self.file_name, suite_name=self.suite_name,
-                                                test_name=self.test_name, status=self.status,
-                                                start_time=self.start_time, stop_time=self.stop_time,
-                                                std_out=self.std_out)
-        with open("report.html", "a") as output:
-            output.write(final_output)
+        bd.save_test_result(self.file_name, self.suite_name, self.test_name, self.status, self.start_time,
+                            self.stop_time, self.std_out)
+
+        # final_output = template.safe_substitute(file_name=self.file_name, suite_name=self.suite_name,
+        #                                         test_name=self.test_name, status=self.status,
+        #                                         start_time=self.start_time, stop_time=self.stop_time,
+        #                                         std_out=self.std_out)
+        # with open("report.html", "a") as output:
+        #     output.write(final_output)
