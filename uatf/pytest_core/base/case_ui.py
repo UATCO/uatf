@@ -92,3 +92,6 @@ class TestCaseUI(BaseCaseUI):
             Browser().delete_download_dir()
             if cls.driver and cls.config.get('DO_NOT_RESTART', 'GENERAL'):
                 cls.browser.quit()
+
+        from ...report.report_ui import ReportUI
+        ReportUI().create_report()

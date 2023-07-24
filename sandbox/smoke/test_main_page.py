@@ -17,7 +17,7 @@ class TestMainPage(TestCaseUI):
     def test_02_check_auth(self):
         """Проверяем авторизацию"""
 
-        self.page.auth(self.config.GENERAL.get('USER_NAME'), self.config.GENERAL.get('PASSWORD'))
+        self.page.auth(self.config.GENERAL.get(''), self.config.GENERAL.get('PASSWORD'))
 
     def tearDown(self):
         self.browser.close_windows_and_alert()

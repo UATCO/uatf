@@ -26,3 +26,7 @@ class ResultBD:
                             (file_name, suite_name, test_name, status, start_time,
                              stop_time, std_out))
         self.conn.commit()
+
+    def get_test_results(self) -> list:
+        self.cursor.execute('SELECT * FROM test_results')
+        return self.cursor.fetchall()
