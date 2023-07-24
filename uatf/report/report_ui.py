@@ -7,6 +7,9 @@ bd = ResultBD()
 with open("/Users/artur_gaazov/Documents/uatf/uatf/report/template_ui.html") as tpl:
     template = string.Template(tpl.read())
 
+with open("/Users/artur_gaazov/Documents/uatf/uatf/report/style_ui.css") as stpl:
+    template_css = string.Template(stpl.read())
+
 
 class ReportUI:
     """Класс для создания отчета"""
@@ -36,7 +39,7 @@ class ReportUI:
             <td>{file_name}</td>
             <td>{suite_name}</td>
             <td>{test_name}</td>
-            <td>{status}</td>
+            <td class={'"status-failed"' if status == 'failed' else '"status-passed"'}>{status}</td>
             <td>{start_time}</td>
             <td>{stop_time}</td>
         <td><pre>{std_out}</pre></td>
@@ -45,3 +48,7 @@ class ReportUI:
         final_output = template.safe_substitute(content=content)
         with open("report.html", "w") as output:
             output.write(final_output)
+
+        with open('style.css', 'w') as style:
+            style.write(template_css.template)
+

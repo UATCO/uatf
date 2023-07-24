@@ -1,0 +1,12 @@
+td {
+    text-align: center;
+}
+
+
+.status-failed {
+    background-color: red;
+}
+
+.status-passed {
+    background-color: green;
+}
