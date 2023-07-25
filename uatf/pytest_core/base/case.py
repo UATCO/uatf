@@ -14,6 +14,9 @@ class TestCase:
     config = Config()
     name_class: str = ''
 
+    # TODO вынести в ранер тестов
+    create_artifact_folder()
+
     @classmethod
     def _setup_class_framework(cls):
         """Общие действия перед запуском всех тестов"""
@@ -24,7 +27,6 @@ class TestCase:
         assert cls.check_service(url) is True, 'Сервис недоступен'
 
         #TODO вынести в ранер тестов
-        create_artifact_folder()
         from ...report.bd_model import ResultBD
         ResultBD().setup()
 
