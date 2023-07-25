@@ -8,7 +8,7 @@ class ResultBD:
         self._connect()
 
     def _connect(self):
-        self.conn = sqlite3.connect('result.db', timeout=10)
+        self.conn = sqlite3.connect('artifact/result.db', timeout=10)
         self.cursor = self.conn.cursor()
 
     def setup(self):

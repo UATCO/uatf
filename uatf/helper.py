@@ -131,3 +131,10 @@ def get_artifact_path(folder: Optional[str] = None) -> str:
     if not os.path.isdir(artifact_dir):
         os.makedirs(artifact_dir)
     return os.path.abspath(artifact_dir)
+
+
+def create_artifact_folder():
+    """Создаем папку для артифактов"""
+
+    if not os.path.isdir("artifact"):
+        os.mkdir("artifact")

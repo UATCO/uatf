@@ -94,4 +94,5 @@ class TestCaseUI(BaseCaseUI):
                 cls.browser.quit()
 
         from ...report.report_ui import ReportUI
+        #TODO вынести в раннер тестов
         ReportUI().create_report()

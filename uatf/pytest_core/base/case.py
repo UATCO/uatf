@@ -1,8 +1,11 @@
+import os
+
 import pytest
 import requests
 
 from ...logfactory import log
 from ...config import Config
+from ...helper import create_artifact_folder
 
 
 class TestCase:
@@ -20,6 +23,8 @@ class TestCase:
         url = cls.config.get('SITE', 'GENERAL')
         assert cls.check_service(url) is True, 'Сервис недоступен'
 
+        #TODO вынести в ранер тестов
+        create_artifact_folder()
         from ...report.bd_model import ResultBD
         ResultBD().setup()
 

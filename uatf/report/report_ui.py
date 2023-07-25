@@ -4,10 +4,20 @@ import sqlite3
 from .bd_model import ResultBD
 
 bd = ResultBD()
-with open("/Users/artur_gaazov/Documents/uatf/uatf/report/template_ui.html") as tpl:
+
+
+def get_tpl_path(file_name: str):
+    """Получаем путь до шаблонов"""
+
+    lib_path = os.path.split(__file__)[0]
+    file = os.path.join(lib_path, 'templates', file_name)
+    return file
+
+
+with open(get_tpl_path("template_ui.html")) as tpl:
     template = string.Template(tpl.read())
 
-with open("/Users/artur_gaazov/Documents/uatf/uatf/report/style_ui.css") as stpl:
+with open(get_tpl_path("style_ui.css")) as stpl:
     template_css = string.Template(stpl.read())
 
 
@@ -48,9 +58,8 @@ class ReportUI:
         </tr>\n"""
 
         final_output = template.safe_substitute(content=content)
-        with open("report.html", "w") as output:
+        with open("artifact/report.html", "w") as output:
             output.write(final_output)
 
-        with open('style.css', 'w') as style:
+        with open('artifact/style.css', 'w') as style:
             style.write(template_css.template)
-
