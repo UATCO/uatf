@@ -20,6 +20,9 @@ with open(get_tpl_path("template_ui.html")) as tpl:
 with open(get_tpl_path("style_ui.css")) as stpl:
     template_css = string.Template(stpl.read())
 
+with open(get_tpl_path("ui_report.js")) as stpl:
+    template_js = string.Template(stpl.read())
+
 
 class ReportUI:
     """Класс для создания отчета"""
@@ -63,3 +66,6 @@ class ReportUI:
 
         with open('artifact/style.css', 'w') as style:
             style.write(template_css.template)
+
+        with open('artifact/report.js', 'w') as style:
+            style.write(template_js.template)
