@@ -57,7 +57,9 @@ class ReportUI:
             <td class={'"status-failed"' if status == 'failed' else '"status-passed"'}>{status}</td>
             <td>{start_time}</td>
             <td>{stop_time}</td>
-            <td class="std_out"><pre>{std_out}</pre></td>
+            <td class="std_out">
+                {self.change_std_out(std_out) if bool(std_out) else ''}
+            </td>
         </tr>\n"""
 
         final_output = template.safe_substitute(content=content)
@@ -69,3 +71,17 @@ class ReportUI:
 
         with open('artifact/report.js', 'w') as style:
             style.write(template_js.template)
+
+    def change_std_out(self, std_out: str):
+        """формируем кусок html-отчета в кликабельными ссылками"""
+
+        new_std_out = ''
+        std_lst = std_out.split('\n')
+        for row in std_lst:
+            if std_lst.index(row) in [1, 3, 5]:
+                _ = row.split()
+                file_path = f"""{_[1].split(' ')[-1].replace('"', '')[:-1]}:{_[-3][:-1]}"""
+                new_std_out = new_std_out + f'<pre>  {_[0][:7]} <a href="http://localhost:63342/api/file/{file_path}">{file_path}</a> {_[-2]} {_[-1]}</pre>\n'
+            else:
+                new_std_out = new_std_out + f'<pre>{row}</pre>\n'
+        return new_std_out
