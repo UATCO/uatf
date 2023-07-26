@@ -2,8 +2,10 @@ import os
 import string
 import sqlite3
 from .bd_model import ResultBD
+from .. import Config
 
 bd = ResultBD()
+config = Config()
 
 
 def get_tpl_path(file_name: str):
@@ -27,7 +29,7 @@ with open(get_tpl_path("ui_report.js")) as stpl:
 class ReportUI:
     """Класс для создания отчета"""
 
-    def __init__(self, file_name: str = None, suite_name: str = None, test_name: str = None, status: str = None,
+    def __init__(self, driver=None, file_name: str = None, suite_name: str = None, test_name: str = None, status: str = None,
                  std_out: str = None, start_time: str = None,
                  stop_time: str = None):
         self.file_name = file_name
@@ -37,6 +39,7 @@ class ReportUI:
         self.std_out = std_out
         self.start_time = start_time
         self.stop_time = stop_time
+        self.driver = driver
 
     def save_test_result(self):
         """Сохраняем тестовые данные в бд"""
@@ -46,6 +49,9 @@ class ReportUI:
 
     def create_report(self):
         """Создаем html-отчет"""
+
+        self.generate_gif()
+
         content = ''
         rs = bd.get_test_results()
         for (file_name, suite_name, test_name, status, start_time, stop_time, std_out) in rs:
@@ -85,3 +91,12 @@ class ReportUI:
             else:
                 new_std_out = new_std_out + f'<pre>{row}</pre>\n'
         return new_std_out
+
+    def generate_gif(self):
+        """Генерируем GIF"""
+
+        gif_name = ''
+        if config.get("SCREEN_CAPTURE", 'GENERAL').lower() == 'gif':
+            from ..ui.screen_capture import make_gif
+            gif_name = make_gif(self.driver)
+        return gif_name

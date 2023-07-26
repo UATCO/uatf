@@ -88,11 +88,13 @@ class TestCaseUI(BaseCaseUI):
 
         log('_teardown_class_framework', '[d]')
         super()._teardown_class_framework()
+        from ...report.report_ui import ReportUI
+        #TODO вынести в раннер тестов
+        ReportUI(driver=cls.driver).create_report()
+
         if cls.config:
             Browser().delete_download_dir()
             if cls.driver and cls.config.get('DO_NOT_RESTART', 'GENERAL'):
                 cls.browser.quit()
 
-        from ...report.report_ui import ReportUI
-        #TODO вынести в раннер тестов
-        ReportUI().create_report()
+

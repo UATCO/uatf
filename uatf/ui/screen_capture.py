@@ -94,11 +94,7 @@ def make_screen_for_gif(driver, element=None, type_of_action=None, data=None, lo
     if not path.isfile(screenshot_path):
         bg = Image.open(io.BytesIO(bytearray(screenshot_data)))
         img = Image.new("RGB", bg.size, (255, 255, 255))
-        from .browser import Env
-        if not Env.is_mobile():
-            img.paste(bg, (0, 0), bg)
-        else:
-            img.paste(bg, (0, 0))
+        img.paste(bg, (0, 0), bg)
         img.save(screenshot_path, quality=95)
     add_screen_for_gif(screenshot_path)
 
@@ -376,14 +372,14 @@ def make_gif(driver):
         size = driver.get_window_size()
         if size['height'] > 127:  # размер окна больше размера скрина
             size['height'] -= 126
-        gif.resize((size['width'], size['height']), Image.ANTIALIAS)
+        gif.resize((size['width'], size['height']))
 
         # скрины
         images = [Image.open(screen) for screen in screenshot_list]
         # генерация gif
         gif_bytes = io.BytesIO()
         gif.save(gif_bytes, format='gif', duration=1000, loop=0, save_all=True, append_images=images)
-        gif_name, _http = save_artifact(f'{gif_name}.gif', gif_bytes, folder='screenshots', mode='wb')
+        gif_name, _http = save_artifact(f'{gif_name}.gif', gif_bytes.getvalue(), folder='screenshots', mode='wb')
     return _http or gif_name
 
 
