@@ -60,6 +60,7 @@ DEFAULT_VALUES = {
         Option("CHROME_MOBILE_EMULATION", "", type=str, help="Название устройства для эмуляции"),
         Option("ARTIFACT_PATH", os.path.join(os.getcwd(), 'artifact'), action="store", type=str,
                help="Абсолютный путь до папки с артефактами, по дефолту текущая папка"),
+        Option('CREATE_REPORT', False, type=bool, help='Создавать отчет по пройденным тестам?')
 
     ],
     'REGRESSION': [
