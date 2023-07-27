@@ -65,8 +65,10 @@ DEFAULT_VALUES = {
     ],
     'REGRESSION': [
         Option('COVERAGE', False, action='store', type=type_bool, help='Собирать покрытие JS'),
-    ]
+    ],
+    'CUSTOM': [
 
+    ]
 }
 
 
@@ -98,7 +100,7 @@ class Config:
         _file = open(path, 'r')
         parser.read_file(_file)
         for section in parser.sections():
-            self.options.fromkeys(section.upper(), {})
+            self.options.fromkeys([section.upper()], {})
             for option in parser.options(section):
                 self.options[section.upper()][option.upper()] = parser.get(section, option)
         return self.options

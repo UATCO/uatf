@@ -6,6 +6,7 @@ from _pytest.reports import TestReport
 from _pytest.runner import CallInfo
 from ..report.report_ui import ReportUI
 from ..logfactory import log
+from ..config import Config
 
 
 class Status:
@@ -64,7 +65,7 @@ def pytest_runtest_makereport(item: pytest.Item, call: CallInfo[None]):
     outcome = yield
     report: TestReport = outcome.get_result()
 
-    if report.when == 'call':
+    if report.when == 'call' and Config().get('CREATE_REPORT', 'GENERAL'):
         log('Создаем отчет прохождения теста')
         cls = item.getparent(pytest.Class)
         suite = cls.obj
