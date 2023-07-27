@@ -13,3 +13,5 @@ config.ini
 report.html
 style.css
 report.js
+*.jpg
+*.gif

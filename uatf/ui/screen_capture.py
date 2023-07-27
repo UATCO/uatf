@@ -2,6 +2,7 @@
 import base64
 import hashlib
 import io
+import shutil
 from dataclasses import dataclass
 import os
 import tempfile
@@ -74,7 +75,7 @@ def make_screen_for_gif(driver, element=None, type_of_action=None, data=None, lo
     screen_folder = CONFIG.get('TMP_DIR_SCREENS', 'GENERAL')
     if not screen_folder:
         # папка временная, после генерации удаляется, поэтому можно сохранить в текущую
-        screen_folder = tempfile.mkdtemp(dir=os.getcwd())
+        screen_folder = tempfile.mkdtemp(dir=os.path.join(os.getcwd(), 'artifact'))
         CONFIG.set_option('TMP_DIR_SCREENS', screen_folder, 'GENERAL')
 
     try:
@@ -360,7 +361,7 @@ def get_path_first_frame():
 def make_gif(driver):
     """Генерируем gif-картинку"""
 
-    gif_name = _http = ''
+    gif_name = _http = last_img = ''
     screenshot_list = config_general.get('SCREENSHOT_LIST')
     if len(screenshot_list) > 1:
         gif_name = gen_file_name(screenshot_list)
@@ -370,17 +371,18 @@ def make_gif(driver):
         # стартовый кадр
         gif = Image.open(start_frame)
         size = driver.get_window_size()
-        if size['height'] > 127:  # размер окна больше размера скрина
-            size['height'] -= 126
         gif.resize((size['width'], size['height']))
 
         # скрины
-        images = [Image.open(screen) for screen in screenshot_list]
+        images = [Image.open(screen).resize((size['width'], size['height'])) for screen in screenshot_list]
         # генерация gif
         gif_bytes = io.BytesIO()
         gif.save(gif_bytes, format='gif', duration=1000, loop=0, save_all=True, append_images=images)
         gif_name, _http = save_artifact(f'{gif_name}.gif', gif_bytes.getvalue(), folder='screenshots', mode='wb')
-    return _http or gif_name
+        last_img = os.path.join(os.path.dirname(gif_name), os.path.basename(screenshot_list[-1]))
+        os.rename(screenshot_list[-1], last_img)
+
+    return gif_name, last_img
 
 
 def make_video(with_metainfo=None):

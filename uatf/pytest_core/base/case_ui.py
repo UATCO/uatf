@@ -86,11 +86,12 @@ class TestCaseUI(BaseCaseUI):
     def _teardown_class_framework(cls):
         """Общие действия после прохода всех тестов"""
 
-        log('_teardown_class_framework', '[d]')
-        super()._teardown_class_framework()
         from ...report.report_ui import ReportUI
         #TODO вынести в раннер тестов
         ReportUI(driver=cls.driver).create_report()
+
+        log('_teardown_class_framework', '[d]')
+        super()._teardown_class_framework()
 
         if cls.config:
             Browser().delete_download_dir()

@@ -1,3 +1,4 @@
+import shutil
 from typing import Optional
 
 from selenium.webdriver.chrome.webdriver import WebDriver
@@ -53,3 +54,13 @@ class BaseCaseUI(TestCase):
         """Метод выполняется после прохождения всех тестов"""
 
         super()._teardown_class_framework()
+        cls._delete_gif_screen()
+
+    @classmethod
+    def _delete_gif_screen(cls):
+        """Удаление темповой папки со скринами для gif"""
+
+        screen_folder = cls.config.get('TMP_DIR_SCREENS', 'GENERAL')
+        if screen_folder:
+            shutil.rmtree(screen_folder, True)
+        cls.config.set_option('TMP_DIR_SCREENS', None, 'GENERAL')

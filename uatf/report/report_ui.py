@@ -29,7 +29,8 @@ with open(get_tpl_path("ui_report.js")) as stpl:
 class ReportUI:
     """Класс для создания отчета"""
 
-    def __init__(self, driver=None, file_name: str = None, suite_name: str = None, test_name: str = None, status: str = None,
+    def __init__(self, driver=None, file_name: str = None, suite_name: str = None, test_name: str = None,
+                 status: str = None,
                  std_out: str = None, start_time: str = None,
                  stop_time: str = None):
         self.file_name = file_name
@@ -44,17 +45,16 @@ class ReportUI:
     def save_test_result(self):
         """Сохраняем тестовые данные в бд"""
 
+        gif_path, img_path = self.generate_gif()
         bd.save_test_result(self.file_name, self.suite_name, self.test_name, self.status, self.start_time,
-                            self.stop_time, self.std_out)
+                            self.stop_time, self.std_out, img_path, gif_path)
 
     def create_report(self):
         """Создаем html-отчет"""
 
-        self.generate_gif()
-
         content = ''
         rs = bd.get_test_results()
-        for (file_name, suite_name, test_name, status, start_time, stop_time, std_out) in rs:
+        for (file_name, suite_name, test_name, status, start_time, stop_time, std_out, img_path, gif_path) in rs:
             content = content + f"""
         <tr>
             <td>{file_name}</td>
@@ -66,6 +66,8 @@ class ReportUI:
             <td class="std_out">
                 {self.change_std_out(std_out) if bool(std_out) else ''}
             </td>
+            {f'<td><a href={gif_path}><img src={img_path} alt="Видео падения"></a></td>' if status == 'failed' else '<td></td>'}
+            
         </tr>\n"""
 
         final_output = template.safe_substitute(content=content)
@@ -95,8 +97,8 @@ class ReportUI:
     def generate_gif(self):
         """Генерируем GIF"""
 
-        gif_name = ''
+        gif_name, last_img = '', None
         if config.get("SCREEN_CAPTURE", 'GENERAL').lower() == 'gif':
             from ..ui.screen_capture import make_gif
-            gif_name = make_gif(self.driver)
-        return gif_name
+            gif_name, last_img = make_gif(self.driver)
+        return gif_name, last_img
