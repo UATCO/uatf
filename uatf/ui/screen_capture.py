@@ -361,26 +361,25 @@ def get_path_first_frame():
 def make_gif(driver):
     """Генерируем gif-картинку"""
 
-    gif_name = _http = last_img = ''
+    _http = ''
     screenshot_list = config_general.get('SCREENSHOT_LIST')
-    if len(screenshot_list) > 1:
-        gif_name = gen_file_name(screenshot_list)
-        from PIL import Image
-        # стартовый frame
-        start_frame = get_path_first_frame()
-        # стартовый кадр
-        gif = Image.open(start_frame)
-        size = driver.get_window_size()
-        gif.resize((size['width'], size['height']))
+    gif_name = gen_file_name(screenshot_list)
+    from PIL import Image
+    # стартовый frame
+    start_frame = get_path_first_frame()
+    # стартовый кадр
+    gif = Image.open(start_frame)
+    size = driver.get_window_size()
+    gif.resize((size['width'], size['height']))
 
-        # скрины
-        images = [Image.open(screen).resize((size['width'], size['height'])) for screen in screenshot_list]
-        # генерация gif
-        gif_bytes = io.BytesIO()
-        gif.save(gif_bytes, format='gif', duration=1000, loop=0, save_all=True, append_images=images)
-        gif_name, _http = save_artifact(f'{gif_name}.gif', gif_bytes.getvalue(), folder='screenshots', mode='wb')
-        last_img = os.path.join(os.path.dirname(gif_name), os.path.basename(screenshot_list[-1]))
-        os.rename(screenshot_list[-1], last_img)
+    # скрины
+    images = [Image.open(screen).resize((size['width'], size['height'])) for screen in screenshot_list]
+    # генерация gif
+    gif_bytes = io.BytesIO()
+    gif.save(gif_bytes, format='gif', duration=1000, loop=0, save_all=True, append_images=images)
+    gif_name, _http = save_artifact(f'{gif_name}.gif', gif_bytes.getvalue(), folder='screenshots', mode='wb')
+    last_img = os.path.join(os.path.dirname(gif_name), os.path.basename(screenshot_list[-1]))
+    os.rename(screenshot_list[-1], last_img)
 
     return gif_name, last_img
 

@@ -53,6 +53,7 @@ class ReportUI:
             gif_path, img_path = self.generate_video()
         bd.save_test_result(self.file_name, self.suite_name, self.test_name, self.status, self.start_time,
                             self.stop_time, self.std_out, img_path, gif_path)
+        config.set_option('SCREENSHOT_LIST', [], 'GENERAL')
 
     def create_report(self):
         """Создаем html-отчет"""
