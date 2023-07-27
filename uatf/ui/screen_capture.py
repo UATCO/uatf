@@ -388,7 +388,7 @@ def make_gif(driver):
 def make_video(with_metainfo=None):
     """Генерируем Видео из скриншотов"""
     import os
-    video_file_name = ''
+    video_file_name = last_img = ''
     screenshot_list = config_general.get('SCREENSHOT_LIST')
 
     if screenshot_list and len(screenshot_list) > 1:
@@ -418,8 +418,10 @@ def make_video(with_metainfo=None):
 
         video.release()
         cv2.destroyAllWindows()
+        last_img = os.path.join(os.path.dirname(video_file_name), os.path.basename(screenshot_list[-1]))
+        os.rename(screenshot_list[-1], last_img)
 
-    return video_file_name or None
+    return video_file_name, last_img or None
 
 
 def draw_metainfo(image, video, with_metainfo):
