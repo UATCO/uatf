@@ -64,7 +64,7 @@ class BaseControl(BaseElement):
 
         for key, value in self.get_elements():
             if issubclass(value.__class__, BaseElement):
-                value.init(self.driver, parent=self, region=region, name=key)
+                value.init(self.driver, parent=self, region=region)
             elif issubclass(value.__class__, BaseRegion):
                 value.__init__(self.driver)
 
