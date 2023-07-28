@@ -91,7 +91,7 @@ try:
         if wait_time:
             if not isinstance(arg1, BaseElement) and not callable(arg1):
                 if hasattr(arg2, 'item2'):
-                    if not callable(arg2.item2):
+                    if not callable(arg2.item2) and type(arg2.item2):
                         raise Exception('Wait в assert_that не работает! '
                                         'Проверьте правильность написания assert')
 except ImportError:
