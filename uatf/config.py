@@ -60,7 +60,10 @@ DEFAULT_VALUES = {
         Option("CHROME_MOBILE_EMULATION", "", type=str, help="Название устройства для эмуляции"),
         Option("ARTIFACT_PATH", os.path.join(os.getcwd(), 'artifact'), action="store", type=str,
                help="Абсолютный путь до папки с артефактами, по дефолту текущая папка"),
-        Option('CREATE_REPORT', False, type=bool, help='Создавать отчет по пройденным тестам?')
+        Option('CREATE_REPORT', False, type=bool, help='Создавать отчет по пройденным тестам?'),
+        Option("TEST_PATTERN", "test*.py", action="store", type=str, help="Паттерн для поиска файлов"),
+        Option("RECURSIVE_SEARCH", True, action="store", type=type_bool, help="Поиск тестов в подпапках"),
+        Option("STREAMS_NUMBER", 12, action="store", type=int, help="число одновременно запущенных наборов тестов"),
 
     ],
     'REGRESSION': [
