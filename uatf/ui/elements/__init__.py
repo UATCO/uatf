@@ -8,5 +8,5 @@ from .text import Text
 from .text_field import TextField
 
 __all__ = (
-    'ElementList', 'CustomList', 'Element', 'Text', 'TextField', 'Link', 'Button'
+    'ElementList', 'CustomList', 'Element', 'Text', 'TextField', 'Link', 'Button', 'Control'
 )

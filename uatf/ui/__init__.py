@@ -20,5 +20,5 @@ __all__ = (
     'is_displayed', 'is_empty', 'is_not_displayed', 'is_not_empty', 'is_not_present', 'is_present',
     # elements
     'ElementList', 'CustomList', 'Element', 'Text',
-    'TextField', 'Link', 'Button', 'Region'
+    'TextField', 'Link', 'Button', 'Region', 'Control'
 )
