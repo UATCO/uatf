@@ -231,7 +231,7 @@ class RunTests:
         self._generate_list_of_file_for_run()
         self._basic_run()
 
-        if self.restart_after_build_mode:
+        if bool(self.restart_after_build_mode):
             log('Поиск упавших тестов')
             exists_failed = self.cache.exists_failed_tests()
             if exists_failed:
