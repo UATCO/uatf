@@ -9,6 +9,7 @@ from typing import Dict, Any, List, Union
 
 import pytest
 
+from .cache import CacheResults
 from .logfactory import log
 
 from uatf import Config
@@ -37,12 +38,17 @@ class RunTests:
         self.options = sys.argv[1:]
         self.test_files: Dict[str, Any] = {}
         self.config = Config()
+        self.restart_after_build_mode = self.config.get('RESTART_AFTER_BUILD_MODE', 'GENERAL')
         self.recursive_search = self.config.get('RECURSIVE_SEARCH', 'GENERAL')
         self.test_pattern = self.config.get('TEST_PATTERN', 'GENERAL')
+        self.cache = CacheResults()
         self.cwd = os.getcwd()
         self.tests = self._find_files()
         self._patch_env()
         self.streams_number = self.config.get('STREAMS_NUMBER', 'GENERAL')
+        self.config.set_option('CACHE_ENABLE', True, 'GENERAL')  # to save cahce
+        self._start_failed = self.config.get('START_FAIL', 'GENERAL')
+        self._rerun = False
         plugins = 'uatf.pytest_core.plugin,uatf.pytest_core.fixtures.subtests'
         os.environ["PYTEST_PLUGINS"] = f"{plugins}"
 
@@ -136,13 +142,38 @@ class RunTests:
             self._check_file_list()
         return is_run
 
+    @staticmethod
+    def _get_node_id_by_tests(test_file, tests) -> List[str]:
+        tests = set(tests)
+        pytest_node_ids_set = set()
+        full_node_ids_set = set()
+        for test in tests:
+            full_node_ids_set.add(f'{test_file}::{test}')
+            pytest_node_ids_set.add(f'{test_file}')
+
+        pytest_node_ids_list = list(pytest_node_ids_set)
+        full_node_ids_list = list(full_node_ids_set)
+
+        pytest_node_ids_list.append('--NODE_IDS')
+        pytest_node_ids_list.extend(full_node_ids_list)
+        return pytest_node_ids_list
+
     def _run_test(self, test: str, **kwargs: str) -> 'subprocess.Popen':
         """Запускает тестовый набор"""
 
-        action = 'RUN'
+        action = 'RUN' if not self._rerun else 'RERUN'
         log(f"{action} FILE: %s" % test)
+        tests_in_file = self.test_files[test]['tests']
         commands = get_pytest_run_command()
         commands.append(test)
+
+        if self._start_failed:
+            node_id = self._get_node_id_by_tests(test, tests_in_file)
+            commands.extend(node_id)
+            if self._rerun:
+                commands.append('--RERUN')
+        else:
+            commands.append(test)
 
         for k, v in kwargs.items():
             commands.extend([f'--{k}', v])
@@ -173,8 +204,22 @@ class RunTests:
     def run_tests(self):
         """Запускает тесты"""
 
+        self.cache.init(self._start_failed)
         self._generate_list_of_file_for_run()
         self._basic_run()
+
+        if self.restart_after_build_mode:
+            log('Поиск упавших тестов')
+            exists_failed = self.cache.exists_failed_tests()
+            if exists_failed:
+                log('Упавшие тесты найдены, перезапускаем')
+                self.restart_after_build_mode = False
+                self._start_failed = True
+                self._rerun = True
+                self._generate_list_of_file_for_run()
+                self._basic_run()
+            else:
+                log('Все тесты прошли успешно')
 
 
 def main(*args, **kwargs):

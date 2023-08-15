@@ -64,7 +64,11 @@ DEFAULT_VALUES = {
         Option("TEST_PATTERN", "test*.py", action="store", type=str, help="Паттерн для поиска файлов"),
         Option("RECURSIVE_SEARCH", True, action="store", type=type_bool, help="Поиск тестов в подпапках"),
         Option("STREAMS_NUMBER", 12, action="store", type=int, help="число одновременно запущенных наборов тестов"),
-
+        Option('START_FAIL', False, action='store_true',
+               help='Если надо запустить только упавшие тесты из последнего прогона'),
+        Option('RESTART_FAIL_WITHOUT_ERRORS', False, action='store_true',
+               help='Если надо запустить только упавшие тесты из последнего прогона '
+                    'за исключение тестов, подписанных ошибками'),
     ],
     'REGRESSION': [
         Option('COVERAGE', False, action='store', type=type_bool, help='Собирать покрытие JS'),
@@ -145,3 +149,7 @@ class Config:
         option_name = name.upper()
         section_name = section.upper()
         self.options[section_name][option_name] = value
+
+    @property
+    def restart_failed_tests(self):
+        return self.get('RESTART_FAIL_WITHOUT_ERRORS') or self.get('START_FAIL')
