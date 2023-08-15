@@ -4,6 +4,7 @@
 import os
 import subprocess
 import sys
+from collections import defaultdict
 from fnmatch import fnmatch
 from typing import Dict, Any, List, Union
 
@@ -119,27 +120,50 @@ class RunTests:
             for key in empty_files:
                 self.test_files.pop(key)
 
+    def get_failed_tests(self) -> bool:
+        """Считываем упавшие тесты"""
+
+        self.test_files = defaultdict(self._default_test_value)
+
+        fail_tests = self.cache.get_failed_tests()
+        for file, suite, test in fail_tests:
+            full_name = f'{suite}::{test}'
+            if full_name not in self.test_files[file]['tests']:
+                self.test_files[file]['tests'].append(full_name)
+        if not self.test_files:
+            if self.config.get('DO_NOT_CRASH_WITHOUT_FAILED_TEST', 'GENERAL'):
+                log('WARNING! Упавшие тесты не найдены, '
+                         'но передана опция DO_NOT_CRASH_WITHOUT_FAILED_TEST')
+                return False
+            else:
+                raise ValueError('Не найдены упавшие тесты!')
+
+        self.cache.delete_failed_tests()
+        return True
+
     def _generate_list_of_file_for_run(self) -> bool:
         """Создаем список файлов для запуска"""
 
         is_run = True
-
-        tmp_cmd = self.config.get('FILES_TO_START', 'GENERAL')
-        tmp_config = getattr(Config(), 'files_to_start', None)
-        files_to_start = tmp_cmd or tmp_config
-        if not files_to_start:
-            log("Получаем список файлов в текущей директории")
-            log("Запускаются только скрипты %s" % self.test_pattern)
-            for file in self.tests:
-                self.test_files[file] = self._default_test_value()
+        if self._start_failed:
+            is_run = self.get_failed_tests()
         else:
-            log("Список файлов для запуска получен из командной строки / config.ini")
-            for file in files_to_start:
-                if not os.path.isfile(file):
-                    raise FileNotFoundError('Не найден файл %s' % file)
-                self.test_files[file] = self._default_test_value()
-        if is_run:
-            self._check_file_list()
+            tmp_cmd = self.config.get('FILES_TO_START', 'GENERAL')
+            tmp_config = getattr(Config(), 'files_to_start', None)
+            files_to_start = tmp_cmd or tmp_config
+            if not files_to_start:
+                log("Получаем список файлов в текущей директории")
+                log("Запускаются только скрипты %s" % self.test_pattern)
+                for file in self.tests:
+                    self.test_files[file] = self._default_test_value()
+            else:
+                log("Список файлов для запуска получен из командной строки / config.ini")
+                for file in files_to_start:
+                    if not os.path.isfile(file):
+                        raise FileNotFoundError('Не найден файл %s' % file)
+                    self.test_files[file] = self._default_test_value()
+            if is_run:
+                self._check_file_list()
         return is_run
 
     @staticmethod
@@ -165,7 +189,6 @@ class RunTests:
         log(f"{action} FILE: %s" % test)
         tests_in_file = self.test_files[test]['tests']
         commands = get_pytest_run_command()
-        commands.append(test)
 
         if self._start_failed:
             node_id = self._get_node_id_by_tests(test, tests_in_file)
