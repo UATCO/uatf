@@ -187,14 +187,10 @@ class RunTests:
 
         action = 'RUN' if not self._rerun else 'RERUN'
         log(f"{action} FILE: %s" % test)
-        tests_in_file = self.test_files[test]['tests']
         commands = get_pytest_run_command()
 
         if self._start_failed:
-            node_id = self._get_node_id_by_tests(test, tests_in_file)
-            commands.extend(node_id)
-            if self._rerun:
-                commands.append('--RERUN')
+            commands.append(test)
         else:
             commands.append(test)
 
