@@ -5,6 +5,7 @@ from .pytest_core.base.case import TestCase
 from .logfactory import log, info
 from .ui.region import Region
 from .assert_that import *
+from .helper import delay
 
 
 __all__ = (
@@ -16,5 +17,7 @@ __all__ = (
     'less_than', 'less_than_or_equal_to', 'greater_than', 'greater_than_or_equal_to', 'equal_to_xml',
     'is_in_xml',
     #base
-    'TestCaseUI'
+    'TestCaseUI',
+    #helper
+    'delay'
 )

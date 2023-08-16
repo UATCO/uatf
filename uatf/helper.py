@@ -138,3 +138,14 @@ def create_artifact_folder():
 
     if not os.path.isdir("artifact"):
         os.mkdir("artifact")
+
+
+def delay(wait_time, message=''):
+    """time.sleep с логированием
+
+    :param message: сообщение о том, чего ждем.
+    :param wait_time: время ожидания
+    """
+
+    time.sleep(wait_time)
+    log(f'Delay {wait_time} сек. {message}', '[i]')
