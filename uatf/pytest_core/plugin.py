@@ -1,12 +1,19 @@
+import collections
 from datetime import datetime
+from typing import List, Union
 
 from _pytest.config.argparsing import Parser
 import pytest
+from _pytest.main import Session
 from _pytest.reports import TestReport
 from _pytest.runner import CallInfo
 from ..report.report_ui import ReportUI
 from ..logfactory import log
 from ..config import Config
+
+Report = collections.namedtuple('Report', ('driver', 'file_name', 'suite_name', 'test_name', 'status', 'std_out',
+                                           'start_time', 'stop_time'))
+REPORT_LIST: List[Report] = []
 
 
 class Status:
@@ -73,6 +80,14 @@ def pytest_runtest_makereport(item: pytest.Item, call: CallInfo[None]):
 
         start_time = datetime.fromtimestamp(call.start).strftime('%d.%m.%y %H:%M:%S')
         stop_time = datetime.fromtimestamp(call.stop).strftime('%d.%m.%y %H:%M:%S')
-        ReportUI(driver=driver, file_name=item.parent.parent.name, suite_name=item.parent.name, test_name=item.name,
-                 status=report.outcome, std_out=report.longreprtext, start_time=start_time,
-                 stop_time=stop_time).save_test_result()
+        mini_report = ReportUI(driver=driver, file_name=item.parent.parent.name, suite_name=item.parent.name,
+                               test_name=item.name,
+                               status=report.outcome, std_out=report.longreprtext, start_time=start_time,
+                               stop_time=stop_time).save_test_result()
+        REPORT_LIST.append(mini_report)
+
+def pytest_sessionfinish(session: Session, exitstatus: Union[int, pytest.ExitCode]):
+    from ..cache import CacheResults
+    cache = CacheResults()
+    if REPORT_LIST:
+        cache.save_test_result(REPORT_LIST)

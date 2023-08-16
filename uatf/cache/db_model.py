@@ -57,10 +57,10 @@ class DB:
         self.cursor.execute(f'CREATE TABLE {self.FAILED_TESTS_DB} (file text, suite text, test text)')
         self.conn.commit()
 
-    def save_test_result(self, file_name, suite, test, status, exec_time, id_check):
+    def save_test_result(self, file_name, suite, test, status):
         # не делает commit!
-        self.cursor.execute("INSERT INTO test_results VALUES (?, ?, ?, ?, ?, ?)",
-                            (file_name, suite, test, status, exec_time, id_check))
+        self.cursor.execute("INSERT INTO test_results VALUES (?, ?, ?, ?)",
+                            (file_name, suite, test, status))
 
     def get_test_results(self) -> list:
         self.cursor.execute('SELECT * FROM test_results')

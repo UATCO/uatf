@@ -34,8 +34,7 @@ class CacheResults:
         for report in reports:
             is_success = check_success_status(report.status)
             if (self.is_last_run and not is_success) or is_success:
-                self.db.save_test_result(report.file_name, report.suite_name, report.test_name, report.status,
-                                         round(report.duration, 3), str(report.id_check))
+                self.db.save_test_result(report.file_name, report.suite_name, report.test_name, report.status)
             if not is_success:
                 self.db.save_failed_tests(report.file_name, report.suite_name, report.test_name)
         self.db.conn.commit()
