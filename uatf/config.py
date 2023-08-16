@@ -69,6 +69,8 @@ DEFAULT_VALUES = {
         Option('RESTART_FAIL_WITHOUT_ERRORS', False, action='store_true',
                help='Если надо запустить только упавшие тесты из последнего прогона '
                     'за исключение тестов, подписанных ошибками'),
+        Option('CACHE_ENABLE', False, action='store_true', help="Если надо сохранять результаты с БД"),
+
     ],
     'REGRESSION': [
         Option('COVERAGE', False, action='store', type=type_bool, help='Собирать покрытие JS'),

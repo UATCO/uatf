@@ -11,8 +11,7 @@ from ..report.report_ui import ReportUI
 from ..logfactory import log
 from ..config import Config
 
-Report = collections.namedtuple('Report', ('driver', 'file_name', 'suite_name', 'test_name', 'status', 'std_out',
-                                           'start_time', 'stop_time'))
+Report = collections.namedtuple('Report', ('file_name', 'suite_name', 'test_name', 'status'))
 REPORT_LIST: List[Report] = []
 
 
@@ -80,10 +79,12 @@ def pytest_runtest_makereport(item: pytest.Item, call: CallInfo[None]):
 
         start_time = datetime.fromtimestamp(call.start).strftime('%d.%m.%y %H:%M:%S')
         stop_time = datetime.fromtimestamp(call.stop).strftime('%d.%m.%y %H:%M:%S')
-        mini_report = ReportUI(driver=driver, file_name=item.parent.parent.name, suite_name=item.parent.name,
+        ReportUI(driver=driver, file_name=item.parent.parent.name, suite_name=item.parent.name,
                                test_name=item.name,
                                status=report.outcome, std_out=report.longreprtext, start_time=start_time,
                                stop_time=stop_time).save_test_result()
+        mini_report = Report(item.parent.parent.name, item.parent.name, item.name, report.outcome)
+
         REPORT_LIST.append(mini_report)
 
 def pytest_sessionfinish(session: Session, exitstatus: Union[int, pytest.ExitCode]):
