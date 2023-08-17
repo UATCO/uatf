@@ -13,3 +13,14 @@ Settings - Tools - Python integrated Tools - Default test runner: pytest
 Запускать со следующими параметрами в config.ini: <br>
 DO_NOT_RESTART = True <br>
 SOFT_RESTART = False <br>
+
+## Для запуска сборок на сервере:
+Создаем проект (папку) с тестами, прокидываем туда окружение (uatf, pages, controls)
+Запускаем start_tests.py
+
+## Для перезапуска один раз упавших тестов:
+Использовать параметр RESTART_AFTER_BUILD_MODE=True
+
+## Для завпуска всех ат разом и создания полного отчета:
+Добавить в корень проекта start_tests.py + config.py с параметром 
+CREATE_REPORT_SHOW=True
