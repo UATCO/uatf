@@ -355,22 +355,12 @@ class Element(BaseElement):
         self._exec(chain.move_to_element(self).context_click().perform)
         return self
 
-    def scroll_into_view(self, scrollintoview: bool = False) -> 'Element':
+    def scroll_into_view(self) -> 'Element':
         """Скроллит страницу делая элемент видимым
-        :param scrollintoview: выполение скролла к элементу: True - scrollIntoView() / False - scrollIntoViewIfNeeded()
         """
 
-        # костыль из-за аккордеона, иначе обработчики не инициализируются
-        self.driver.execute_script('window.scrollBy(0,1)')
-        time.sleep(0.1)
-
-        if scrollintoview or not CONFIG.get('BROWSER', 'GENERAL'):
-            js_script = "arguments[0].scrollIntoView();"
-        else:
-            js_script = "arguments[0].scrollIntoViewIfNeeded();"
-
-        self._exec(lambda: self.driver.execute_script(js_script, self.webelement()))
-        log("Сделали scroll до элемента %s" % self.name_output(), "[a]")
+        chain = ActionChainsUATF(self.driver)
+        chain.chain.scroll_to_element(self.webelement())
         return self
 
     def mouse_scroll(self, direction: int) -> 'Element':
