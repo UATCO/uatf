@@ -63,7 +63,7 @@ DEFAULT_VALUES = {
         Option('CREATE_REPORT', False, type=bool, help='Создавать отчет по пройденным тестам?'),
         Option("TEST_PATTERN", "test*.py", action="store", type=str, help="Паттерн для поиска файлов"),
         Option("RECURSIVE_SEARCH", True, action="store", type=type_bool, help="Поиск тестов в подпапках"),
-        Option("STREAMS_NUMBER", 12, action="store", type=int, help="число одновременно запущенных наборов тестов"),
+        Option("STREAMS_NUMBER", 5, action="store", type=int, help="число одновременно запущенных наборов тестов"),
         Option('START_FAIL', False, action='store_true',
                help='Если надо запустить только упавшие тесты из последнего прогона'),
         Option('RESTART_FAIL_WITHOUT_ERRORS', False, action='store_true',
