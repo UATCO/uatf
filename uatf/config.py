@@ -61,6 +61,7 @@ DEFAULT_VALUES = {
         Option("ARTIFACT_PATH", os.path.join(os.getcwd(), 'artifact'), action="store", type=str,
                help="Абсолютный путь до папки с артефактами, по дефолту текущая папка"),
         Option('CREATE_REPORT', False, type=bool, help='Создавать отчет по пройденным тестам?'),
+        Option('CREATE_REPORT_SHOW', False, type=bool, help='Создавать отчет по тестам для клиента?'),
         Option("TEST_PATTERN", "test*.py", action="store", type=str, help="Паттерн для поиска файлов"),
         Option("RECURSIVE_SEARCH", True, action="store", type=type_bool, help="Поиск тестов в подпапках"),
         Option("STREAMS_NUMBER", 5, action="store", type=int, help="число одновременно запущенных наборов тестов"),
@@ -98,6 +99,10 @@ class Config:
             self.options = {}
             self._set_default_values()
             self._read_file()
+            if bool(self.get('CREATE_REPORT_SHOW', 'GENERAL')):
+                self.set_option('CREATE_REPORT', True, 'GENERAL')
+                self.set_option('SCREEN_CAPTURE', 'video', 'GENERAL')
+                self.set_option('HEADLESS_MODE', True, 'GENERAL')
             self.device_name = self.get('BROWSER', 'GENERAL')
             self.GENERAL = self.options.get('GENERAL')
             self.CUSTOM = self.options.get('CUSTOM')

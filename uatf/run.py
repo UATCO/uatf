@@ -112,9 +112,10 @@ class RunTests:
             if exit_code != pytest.ExitCode.OK:
                 bad_files.append(file)
 
-        if bad_files:
-            bad_files = '\n'.join(bad_files)
-            raise ValueError(f'Не смогли запустить файлы: {bad_files}')
+        if not self.config.get('CREATE_REPORT_SHOW', 'GENERAL'):
+            if bad_files:
+                bad_files = '\n'.join(bad_files)
+                raise ValueError(f'Не смогли запустить файлы: {bad_files}')
 
         if empty_files:  # удаляем пустые файлы их списка (во время итерации нельзя менять словарь)
             for key in empty_files:

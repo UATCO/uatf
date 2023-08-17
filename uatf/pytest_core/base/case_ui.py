@@ -88,7 +88,6 @@ class TestCaseUI(BaseCaseUI):
 
         if cls.config.get('CREATE_REPORT', 'GENERAL'):
             from ...report.report_ui import ReportUI
-            #TODO вынести в раннер тестов
             ReportUI(driver=cls.driver).create_report()
 
         log('_teardown_class_framework', '[d]')

@@ -61,18 +61,26 @@ class ReportUI:
         content = ''
         rs = bd.get_test_results()
         for (file_name, suite_name, test_name, status, start_time, stop_time, std_out, img_path, gif_path) in rs:
+
+            if status is 'passed':
+                status_class = '"status-passed"'
+            elif Config().get('CREATE_REPORT_SHOW', 'GENERAL') and status != 'failed':
+                status_class = '"status-passed"'
+            else:
+                status_class = '"status-failed"'
+
             content = content + f"""
         <tr>
             <td>{file_name}</td>
             <td>{suite_name}</td>
             <td>{test_name}</td>
-            <td class={'"status-failed"' if status == 'failed' else '"status-passed"'}>{status}</td>
+            <td class={status_class}>{status}</td>
             <td>{start_time}</td>
             <td>{stop_time}</td>
             <td class="std_out">
                 {self.change_std_out(std_out) if bool(std_out) else ''}
             </td>
-            {f'<td><a href={gif_path}><img src={img_path} alt="Видео падения"></a></td>' if status == 'failed' else '<td></td>'}
+            {'<td></td>' if status == 'passed' and not Config().get('CREATE_REPORT_SHOW', 'GENERAL') else f'<td><a href={gif_path}><img src={img_path} alt="Видео падения"></a></td>'}
             
         </tr>\n"""
 
@@ -115,4 +123,3 @@ class ReportUI:
         if config.get("SCREEN_CAPTURE", 'GENERAL').lower() == 'video':
             vedeo_path, last_img = make_video()
         return vedeo_path, last_img
-

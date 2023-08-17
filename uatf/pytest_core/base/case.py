@@ -14,7 +14,6 @@ class TestCase:
     config = Config()
     name_class: str = ''
 
-    # TODO вынести в ранер тестов
     create_artifact_folder()
 
     @classmethod
@@ -26,7 +25,6 @@ class TestCase:
         url = cls.config.get('SITE', 'GENERAL')
         assert cls.check_service(url) is True, 'Сервис недоступен'
 
-        #TODO вынести в ранер тестов
         from ...report.bd_model import ResultBD
         ResultBD().setup()
 
