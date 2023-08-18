@@ -101,7 +101,7 @@ class Config:
             self._read_file()
             if bool(self.get('CREATE_REPORT_SHOW', 'GENERAL')):
                 self.set_option('CREATE_REPORT', True, 'GENERAL')
-                self.set_option('SCREEN_CAPTURE', 'video', 'GENERAL')
+                self.set_option('SCREEN_CAPTURE', 'video_present', 'GENERAL')
                 self.set_option('HEADLESS_MODE', True, 'GENERAL')
             self.device_name = self.get('BROWSER', 'GENERAL')
             self.GENERAL = self.options.get('GENERAL')

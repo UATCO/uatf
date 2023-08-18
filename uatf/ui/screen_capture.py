@@ -70,7 +70,7 @@ def make_screen_for_gif(driver, element=None, type_of_action=None, data=None, lo
     :return:
     """
 
-    if not (CONFIG.is_last_run or RECORD_VIDEO == 'all') or not (RECORD_VIDEO or HIGHLIGHT_ACTION):
+    if not (CONFIG.is_last_run or RECORD_VIDEO == 'video_present') or not (RECORD_VIDEO or HIGHLIGHT_ACTION):
         return
     screen_folder = CONFIG.get('TMP_DIR_SCREENS', 'GENERAL')
     if not screen_folder:
@@ -84,7 +84,7 @@ def make_screen_for_gif(driver, element=None, type_of_action=None, data=None, lo
         return
 
     # Для добавления комментария на скриншоте
-    if element is not None and config_general.get('SCREEN_CAPTURE') == 'all':
+    if element is not None and config_general.get('SCREEN_CAPTURE') == 'video_present':
         screenshot_data = screen_log(screenshot_data, element, driver, type_of_action.text, data)
 
     screenshot_name = (hashlib.md5(screenshot_data).hexdigest()) + ".jpg"

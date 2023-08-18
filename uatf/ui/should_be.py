@@ -959,7 +959,7 @@ def highlight_should_be(condition, element, eth_result):
     """Декоратор выполнения действий до/после action
 
     """
-    if SAVE_SUCCESSFUL_TEST_VIDEO == 'all':
+    if SAVE_SUCCESSFUL_TEST_VIDEO == 'video_present':
         from .browser import Browser
         from ..ui.screen_capture import DrawableType
         if not isinstance(element, Browser):

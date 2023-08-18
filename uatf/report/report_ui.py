@@ -1,6 +1,5 @@
 import os
 import string
-import sqlite3
 from .bd_model import ResultBD
 from .. import Config
 from ..ui.screen_capture import make_gif, make_video
@@ -50,7 +49,8 @@ class ReportUI:
         gif_path = img_path = ''
         if config.get('SCREEN_CAPTURE', 'GENERAL') == 'gif':
             gif_path, img_path = self.generate_gif()
-        elif config.get('SCREEN_CAPTURE', 'GENERAL') == 'video':
+        elif config.get('SCREEN_CAPTURE', 'GENERAL') == 'video' or config.get('SCREEN_CAPTURE',
+                                                                              'GENERAL') == 'video_present':
             gif_path, img_path = self.generate_video()
         bd.save_test_result(self.file_name, self.suite_name, self.test_name, self.status, self.start_time,
                             self.stop_time, self.std_out, img_path, gif_path, self.description)
@@ -61,7 +61,8 @@ class ReportUI:
 
         content = ''
         rs = bd.get_test_results()
-        for (file_name, suite_name, test_name, status, start_time, stop_time, std_out, img_path, gif_path, description) in rs:
+        for (file_name, suite_name, test_name, status, start_time, stop_time, std_out, img_path, gif_path,
+             description) in rs:
 
             if status == 'passed':
                 status_class = '"status-passed"'
@@ -113,15 +114,11 @@ class ReportUI:
     def generate_gif(self):
         """Генерируем GIF"""
 
-        gif_name, last_img = '', None
-        if config.get("SCREEN_CAPTURE", 'GENERAL').lower() == 'gif':
-            gif_name, last_img = make_gif(self.driver)
+        gif_name, last_img = make_gif(self.driver)
         return gif_name, last_img
 
     def generate_video(self):
         """Генерируем видео падения"""
 
-        vedeo_path, last_img = '', None
-        if config.get("SCREEN_CAPTURE", 'GENERAL').lower() == 'video':
-            vedeo_path, last_img = make_video()
+        vedeo_path, last_img = make_video()
         return vedeo_path, last_img
