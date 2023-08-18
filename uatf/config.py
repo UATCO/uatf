@@ -118,7 +118,10 @@ class Config:
         for section in parser.sections():
             self.options.fromkeys([section.upper()], {})
             for option in parser.options(section):
-                self.options[section.upper()][option.upper()] = parser.get(section, option)
+                param = parser.get(section, option)
+                if param in ('True', 'False'):
+                    param = bool(param)
+                self.options[section.upper()][option.upper()] = param
         return self.options
 
     def _set_default_values(self):
