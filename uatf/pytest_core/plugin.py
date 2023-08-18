@@ -23,6 +23,11 @@ class Status:
     SKIPPED = 4
     SKIPPED_JC = 5
 
+def strip_doc(description):
+    doc = description or ''
+    if doc:
+        doc = doc.replace(':return:', '').strip()
+    return doc
 
 def pytest_runtest_protocol(item, nextitem):
     """
@@ -82,7 +87,7 @@ def pytest_runtest_makereport(item: pytest.Item, call: CallInfo[None]):
         ReportUI(driver=driver, file_name=item.parent.parent.name, suite_name=item.parent.name,
                                test_name=item.name,
                                status=report.outcome, std_out=report.longreprtext, start_time=start_time,
-                               stop_time=stop_time).save_test_result()
+                               stop_time=stop_time, description=strip_doc(item.obj.__doc__)).save_test_result()
         mini_report = Report(item.parent.parent.name, item.parent.name, item.name, report.outcome)
 
         REPORT_LIST.append(mini_report)
