@@ -28,33 +28,12 @@ TypeElement = TypeVar('TypeElement', bound='Element')
 TypeSelf = TypeVar('TypeSelf', bound='Element')
 
 
-def check_strategy_search(how: str) -> str:
-    """Проверка правильности задания стратегии поиска"""
-
-    if how == 'css':
-        how = By.CSS_SELECTOR
-    return how
-
-
 def format_locator(locator: str) -> str:
     """Форматирование локатора для мобильных проектов"""
 
     if CONFIG.get('BUNDLE_ID') and '{bundle_id}' in locator:
         locator = locator.format(bundle_id=CONFIG.get('BUNDLE_ID') + ':id/')
     return locator
-
-
-def get_log_element(rus_name: str = '') -> str:
-    """Проверка задано русское наименование или нет"""
-
-    output_log = CONFIG.get('ELEMENT_OUTPUT_LOG', 'GENERAL')
-    if output_log == 'user_friendly':
-        if not rus_name:
-            raise ValueError('В PageObject обязательно задавать русское '
-                             'наименование элементов\n'
-                             '(ELEMENT_OUTPUT_LOG = user_friendly)')
-    return rus_name
-
 
 class Element(BaseElement):
     """Базовый класс для всех элементов
