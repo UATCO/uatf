@@ -103,6 +103,7 @@ class Config:
                 self.set_option('CREATE_REPORT', True, 'GENERAL')
                 self.set_option('SCREEN_CAPTURE', 'video_present', 'GENERAL')
                 self.set_option('HEADLESS_MODE', True, 'GENERAL')
+                self.set_option('HIGHLIGHT_ACTION', True, 'GENERAL')
             self.device_name = self.get('BROWSER', 'GENERAL')
             self.GENERAL = self.options.get('GENERAL')
             self.CUSTOM = self.options.get('CUSTOM')
