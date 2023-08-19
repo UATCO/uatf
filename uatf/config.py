@@ -62,6 +62,7 @@ DEFAULT_VALUES = {
                help="Абсолютный путь до папки с артефактами, по дефолту текущая папка"),
         Option('CREATE_REPORT', False, type=bool, help='Создавать отчет по пройденным тестам?'),
         Option('CREATE_REPORT_SHOW', False, type=bool, help='Создавать отчет по тестам для клиента?'),
+        Option('CREATE_REPORT_DEBUG', False, type=bool, help='Для создания отчета при локальном прогоне ат'),
         Option("TEST_PATTERN", "test*.py", action="store", type=str, help="Паттерн для поиска файлов"),
         Option("RECURSIVE_SEARCH", True, action="store", type=type_bool, help="Поиск тестов в подпапках"),
         Option("STREAMS_NUMBER", 5, action="store", type=int, help="число одновременно запущенных наборов тестов"),
@@ -99,14 +100,18 @@ class Config:
             self.options = {}
             self._set_default_values()
             self._read_file()
-            if bool(self.get('CREATE_REPORT_SHOW', 'GENERAL')):
+            self.device_name = self.get('BROWSER', 'GENERAL')
+            self.GENERAL = self.options.get('GENERAL')
+            self.CUSTOM = self.options.get('CUSTOM')
+
+            if self.get('CREATE_REPORT_DEBUG', 'GENERAL'): #для дебага создания отчет
+                self.set_option('CREATE_REPORT_SHOW', True, 'GENERAL')
+
+            if self.get('CREATE_REPORT_SHOW', 'GENERAL'): #для создания отчета для клиента
                 self.set_option('CREATE_REPORT', True, 'GENERAL')
                 self.set_option('SCREEN_CAPTURE', 'video_present', 'GENERAL')
                 self.set_option('HEADLESS_MODE', True, 'GENERAL')
                 self.set_option('HIGHLIGHT_ACTION', True, 'GENERAL')
-            self.device_name = self.get('BROWSER', 'GENERAL')
-            self.GENERAL = self.options.get('GENERAL')
-            self.CUSTOM = self.options.get('CUSTOM')
 
     def _read_file(self):
         """Разбираем config.ini файл"""

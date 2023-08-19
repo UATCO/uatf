@@ -25,6 +25,10 @@ class TestCase:
         url = cls.config.get('SITE', 'GENERAL')
         assert cls.check_service(url) is True, 'Сервис недоступен'
 
+        if cls.config.get('CREATE_REPORT_DEBUG', 'GENERAL'):
+            from ...report.bd_model import ResultBD
+            ResultBD().setup()
+
         log('_general_setup_class.end', '[d]')
 
     @classmethod
