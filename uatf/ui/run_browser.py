@@ -84,7 +84,7 @@ class RunBrowser:
         if self.config.get('DISABLE_GPU', 'GENERAL') or headless_mode:
             options.add_argument("--disable-gpu")
 
-        self.driver = webdriver.Chrome(chrome_options=options)
+        self.driver = webdriver.Chrome(options=options)
         log("BROWSER: Chrome", '[f]')
 
     def _set_download_dir(self, options):
