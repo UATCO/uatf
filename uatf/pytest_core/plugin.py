@@ -76,7 +76,7 @@ def pytest_runtest_makereport(item: pytest.Item, call: CallInfo[None]):
     outcome = yield
     report: TestReport = outcome.get_result()
 
-    if report.when == 'call' and Config().get('CREATE_REPORT', 'GENERAL'):
+    if report.when == 'call':
         log('Создаем отчет прохождения теста')
         cls = item.getparent(pytest.Class)
         suite = cls.obj
@@ -88,7 +88,8 @@ def pytest_runtest_makereport(item: pytest.Item, call: CallInfo[None]):
                                test_name=item.name,
                                status=report.outcome, std_out=report.longreprtext, start_time=start_time,
                                stop_time=stop_time, description=strip_doc(item.obj.__doc__))
-        report_ui.save_test_result()
+        if Config().get('CREATE_REPORT', 'GENERAL'):
+            report_ui.save_test_result()
         report_ui.generate()
         mini_report = Report(item.parent.parent.name, item.parent.name, item.name, report.outcome)
 
