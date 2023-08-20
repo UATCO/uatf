@@ -1,8 +1,12 @@
+import hashlib
 import os
 import string
 from .bd_model import ResultBD
-from .. import Config
-from ..ui.screen_capture import make_gif, make_video
+from .. import Config, log
+from ..helper import save_artifact
+from ..ui.screen_capture import make_gif, make_video, add_screen_for_gif
+from string import Template
+from ..ui.browser import Browser
 
 bd = ResultBD()
 config = Config()
@@ -32,7 +36,7 @@ class ReportUI:
     def __init__(self, driver=None, file_name: str = None, suite_name: str = None, test_name: str = None,
                  status: str = None,
                  std_out: str = None, start_time: str = None,
-                 stop_time: str = None, description: str = None):
+                 stop_time: str = None, description: str = None, fail_screen: str = None):
         self.file_name = file_name
         self.suite_name = suite_name
         self.test_name = test_name
@@ -42,6 +46,10 @@ class ReportUI:
         self.stop_time = stop_time
         self.driver = driver
         self.description = description
+        self.template_report = self.load_template('report.template')
+        self.str_report = None
+        self.fail_screen = fail_screen
+        self.browser = Browser(self.driver)
 
     def save_test_result(self):
         """Сохраняем тестовые данные в бд"""
@@ -103,7 +111,9 @@ class ReportUI:
         new_std_out = ''
         std_lst = std_out.split('\n')
         for row in std_lst:
-            if std_lst.index(row) in [1, 3, 5]:
+            if '^' in row:
+                continue
+            if std_lst.index(row) in [1, 3, 6]:
                 _ = row.split()
                 file_path = f"""{_[1].split(' ')[-1].replace('"', '')[:-1]}:{_[-3][:-1]}"""
                 new_std_out = new_std_out + f'<pre>  {_[0][:7]} <a href="http://localhost:63342/api/file/{file_path}">{file_path}</a> {_[-2]} {_[-1]}</pre>\n'
@@ -122,3 +132,45 @@ class ReportUI:
 
         vedeo_path, last_img = make_video()
         return vedeo_path, last_img
+
+    @staticmethod
+    def load_template(template_name):
+        """Загружаем шаблон"""
+
+        lib_path = os.path.split(__file__)[0]
+        file = os.path.join(lib_path, 'templates', template_name)
+        if os.path.isfile(file):
+            with open(file, encoding='utf-8') as file:
+                data = file.read()
+            return Template(data)
+        else:
+            raise FileNotFoundError('Не найден файл шаблона: %s' % os.path.abspath(file))
+
+    def generate_console_error(self):
+        """Выводим доп информацию о падении"""
+
+        self.str_report = self.template_report.substitute(
+            screenshots=self.fail_screen
+        )
+
+    def generate(self):
+
+        self.get_screenshot_window()
+        self.generate_console_error()
+        log(self.str_report)
+
+    def get_screenshot_window(self):
+        """Делает скрин открытого окна"""
+
+        self.fail_screen = self.get_screenshot(True)
+
+    def get_screenshot(self, origin_name=False):
+        """Делает скрин текущего окна"""
+
+        screenshot = self.browser.get_screenshot()
+        file_name = hashlib.md5(screenshot).hexdigest() + '.jpg'
+        file_name, _http = save_artifact(file_name, screenshot, folder='screenshots', mode='wb')
+        if not origin_name:
+            return _http
+        else:
+            return file_name

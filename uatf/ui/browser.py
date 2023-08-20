@@ -1,3 +1,4 @@
+import base64
 import json
 import os
 import shutil
@@ -367,3 +368,8 @@ class Browser:
         """
         
         self.actions.move_by_offset(x, y).perform()
+
+    def get_screenshot(self):
+        """Делаем скриншот активного окна, который можно потом записать в файл в режиме wb."""
+
+        return base64.b64decode(self.driver.get_screenshot_as_base64())

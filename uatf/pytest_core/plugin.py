@@ -84,10 +84,12 @@ def pytest_runtest_makereport(item: pytest.Item, call: CallInfo[None]):
 
         start_time = datetime.fromtimestamp(call.start).strftime('%d.%m.%y %H:%M:%S')
         stop_time = datetime.fromtimestamp(call.stop).strftime('%d.%m.%y %H:%M:%S')
-        ReportUI(driver=driver, file_name=item.parent.parent.name, suite_name=item.parent.name,
+        report_ui = ReportUI(driver=driver, file_name=item.parent.parent.name, suite_name=item.parent.name,
                                test_name=item.name,
                                status=report.outcome, std_out=report.longreprtext, start_time=start_time,
-                               stop_time=stop_time, description=strip_doc(item.obj.__doc__)).save_test_result()
+                               stop_time=stop_time, description=strip_doc(item.obj.__doc__))
+        report_ui.save_test_result()
+        report_ui.generate()
         mini_report = Report(item.parent.parent.name, item.parent.name, item.name, report.outcome)
 
         REPORT_LIST.append(mini_report)
