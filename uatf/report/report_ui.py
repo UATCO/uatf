@@ -95,6 +95,7 @@ class ReportUI:
             <td>{stop_time}</td>
             <td class="std_out">
                 {self.change_std_out(std_out) if bool(std_out) else ''}
+                <p><a href={logs_file_path}>Логи теста.</a></p>
             </td>
             {'<td></td>' if status == 'passed' and not Config().get('CREATE_REPORT_SHOW', 'GENERAL') else f'<td><a href={gif_path}><img src={img_path} alt="Видео падения"></a></td>'}
             
