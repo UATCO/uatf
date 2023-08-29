@@ -24,3 +24,6 @@ SOFT_RESTART = False <br>
 ## Для завпуска всех ат разом и создания полного отчета:
 Добавить в корень проекта start_tests.py + config.py с параметром 
 CREATE_REPORT_SHOW=True
+
+## На построилась таблица test_results при локальной прогоне
+Добавь параметр CREATE_REPORT_DEBUG=True в config.ini
