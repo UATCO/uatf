@@ -1,5 +1,7 @@
+import datetime
 import hashlib
 import os
+import random
 import string
 from .bd_model import ResultBD
 from .. import Config, log
@@ -36,7 +38,7 @@ class ReportUI:
     def __init__(self, driver=None, file_name: str = None, suite_name: str = None, test_name: str = None,
                  status: str = None,
                  std_out: str = None, start_time: str = None,
-                 stop_time: str = None, description: str = None, fail_screen: str = None):
+                 stop_time: str = None, description: str = None, fail_screen: str = None, test_logs: str = None):
         self.file_name = file_name
         self.suite_name = suite_name
         self.test_name = test_name
@@ -50,18 +52,21 @@ class ReportUI:
         self.str_report = None
         self.fail_screen = fail_screen
         self.browser = Browser(self.driver)
+        self.test_logs = test_logs
 
     def save_test_result(self):
         """Сохраняем тестовые данные в бд"""
 
-        gif_path = img_path = ''
+        gif_path = img_path = logs_file_path = ''
         if config.get('SCREEN_CAPTURE', 'GENERAL') == 'gif':
             gif_path, img_path = self.generate_gif()
         elif config.get('SCREEN_CAPTURE', 'GENERAL') == 'video' or config.get('SCREEN_CAPTURE',
                                                                               'GENERAL') == 'video_present':
             gif_path, img_path = self.generate_video()
+        if self.status == 'failed' or config.get('SCREEN_CAPTURE','GENERAL') == 'video_present':
+            logs_file_path = self.save_test_logs()
         bd.save_test_result(self.file_name, self.suite_name, self.test_name, self.status, self.start_time,
-                            self.stop_time, self.std_out, img_path, gif_path, self.description)
+                            self.stop_time, self.std_out, img_path, gif_path, self.description, logs_file_path)
         config.set_option('SCREENSHOT_LIST', [], 'GENERAL')
 
     def create_report(self):
@@ -174,3 +179,14 @@ class ReportUI:
             return _http
         else:
             return file_name
+
+    def save_test_logs(self):
+        """Сохраняем тестовые логи"""
+
+        file_name = f"{self.file_name}_{self.suite_name}_{self.test_name}_{datetime.datetime.now().strftime('%d_%m_%Y_%H_%M')}.txt"
+        path = os.path.join(config.get('ARTIFACT_PATH', 'GENERAL'), file_name)
+
+        with open(path, 'w', encoding='utf-8') as file:
+            file.write(self.test_logs)
+            file.write(self.std_out)
+        return path
