@@ -3,7 +3,7 @@ import hashlib
 import os
 import random
 import string
-from .bd_model import ResultBD
+from .db_model import ResultBD
 from .. import Config, log
 from ..helper import save_artifact, get_artifact_path
 from ..ui.screen_capture import make_gif, make_video, add_screen_for_gif

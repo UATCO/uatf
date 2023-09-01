@@ -2,7 +2,7 @@ import os
 import string
 
 from uatf import Config
-from uatf.report.bd_model import ResultBD
+from uatf.report.db_model import ResultBD
 
 bd = ResultBD()
 config = Config()
