@@ -28,6 +28,9 @@ class TestCase:
         if cls.config.get('CREATE_REPORT_DEBUG', 'GENERAL'):
             from ...report.db_model_ui import ResultBDUI
             ResultBDUI().setup()
+        elif cls.config.get('CREATE_REPORT_LAYOUT', 'GENERAL'):
+            from ...report.db_model_layout import ResultBDLayout
+            ResultBDLayout().setup()
 
         log('_general_setup_class.end', '[d]')
 

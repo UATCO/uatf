@@ -60,7 +60,8 @@ DEFAULT_VALUES = {
         Option("CHROME_MOBILE_EMULATION", "", type=str, help="Название устройства для эмуляции"),
         Option("ARTIFACT_PATH", os.path.join(os.getcwd(), 'artifact'), action="store", type=str,
                help="Абсолютный путь до папки с артефактами, по дефолту текущая папка"),
-        Option('CREATE_REPORT', False, type=bool, help='Создавать отчет по пройденным тестам?'),
+        Option('CREATE_REPORT_UI', False, type=bool, help='Создавать отчет по пройденным тестам ui?'),
+        Option('CREATE_REPORT_LAYOUT', False, type=bool, help='Создавать отчет по пройденным тестам верстки?'),
         Option('CREATE_REPORT_SHOW', False, type=bool, help='Создавать отчет по тестам для клиента?'),
         Option('CREATE_REPORT_DEBUG', False, type=bool, help='Для создания отчета при локальном прогоне ат'),
         Option("TEST_PATTERN", "test*.py", action="store", type=str, help="Паттерн для поиска файлов"),
@@ -122,7 +123,7 @@ class Config:
                 self.set_option('CREATE_REPORT_SHOW', True, 'GENERAL')
 
             if self.get('CREATE_REPORT_SHOW', 'GENERAL'): #для создания отчета для клиента
-                self.set_option('CREATE_REPORT', True, 'GENERAL')
+                self.set_option('CREATE_REPORT_UI', True, 'GENERAL')
                 self.set_option('SCREEN_CAPTURE', 'video_present', 'GENERAL')
                 self.set_option('HEADLESS_MODE', True, 'GENERAL')
                 self.set_option('HIGHLIGHT_ACTION', True, 'GENERAL')

@@ -86,7 +86,7 @@ class TestCaseUI(BaseCaseUI):
     def _teardown_class_framework(cls):
         """Общие действия после прохода всех тестов"""
 
-        if cls.config.get('CREATE_REPORT', 'GENERAL'):
+        if cls.config.get('CREATE_REPORT_UI', 'GENERAL'):
             from ...report.report_ui import ReportUI
             ReportUI(driver=cls.driver).create_report()
 
