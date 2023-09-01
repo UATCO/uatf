@@ -1,15 +1,8 @@
-import sqlite3
+from .db_base import DBBase
 
 
-class ResultBD:
-    """Модель бд для результатов тестов"""
-
-    def __init__(self):
-        self._connect()
-
-    def _connect(self):
-        self.conn = sqlite3.connect('artifact/result.db', timeout=10)
-        self.cursor = self.conn.cursor()
+class ResultBDUI(DBBase):
+    """Модель бд для результатов тестов ui"""
 
     def setup(self):
         cursor = self.conn.cursor()
@@ -36,7 +29,3 @@ class ResultBD:
                             (file_name, suite_name, test_name, status, start_time,
                              stop_time, std_out, img_path, gif_path, description, logs_file_path))
         self.conn.commit()
-
-    def get_test_results(self) -> list:
-        self.cursor.execute('SELECT * FROM test_results')
-        return self.cursor.fetchall()

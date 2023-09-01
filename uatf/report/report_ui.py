@@ -3,14 +3,14 @@ import hashlib
 import os
 import random
 import string
-from .db_model import ResultBD
+from .db_model import ResultBDUI
 from .. import Config, log
 from ..helper import save_artifact, get_artifact_path
 from ..ui.screen_capture import make_gif, make_video, add_screen_for_gif
 from string import Template
 from ..ui.browser import Browser
 
-bd = ResultBD()
+bd = ResultBDUI()
 config = Config()
 
 
