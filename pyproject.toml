@@ -1,0 +1,16 @@
+[tool.mypy]
+python_version = "3.11"
+follow_imports = "skip"
+exclude = ["^tests"]
+
+[[tool.mypy.overrides]]
+module = "mypy-selenium.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "mypy-PIL.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "mypy-appium.*"
+ignore_missing_imports = true

@@ -7,6 +7,7 @@ from .ui.region import Region
 from .assert_that import *
 from .helper import delay
 
+__version__ = '0.2.3'
 
 __all__ = (
     'log', 'info', 'Config',
