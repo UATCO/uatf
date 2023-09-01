@@ -225,7 +225,7 @@ class RunTests:
         """Запускает тесты"""
 
         self.cache.init(self._start_failed)
-        from .report.db_model import ResultBDUI
+        from .report.db_model_ui import ResultBDUI
         ResultBDUI().setup()
         self._generate_list_of_file_for_run()
         self._basic_run()

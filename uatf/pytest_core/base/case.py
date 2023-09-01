@@ -26,7 +26,7 @@ class TestCase:
         assert cls.check_service(url) is True, 'Сервис недоступен'
 
         if cls.config.get('CREATE_REPORT_DEBUG', 'GENERAL'):
-            from ...report.db_model import ResultBDUI
+            from ...report.db_model_ui import ResultBDUI
             ResultBDUI().setup()
 
         log('_general_setup_class.end', '[d]')
