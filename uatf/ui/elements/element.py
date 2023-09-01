@@ -8,6 +8,7 @@ from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
 
 from .base_element import BaseElement, before_after
+from .. import Visible, Present
 from ..actions_chains import ActionChainsUATF
 from ...logfactory import log
 from ...assert_that import *
@@ -684,3 +685,8 @@ class Element(BaseElement):
 
         self._exec(action)
         return self
+
+    def check_react_async_load(self):
+        """Проверка асинхронной загрузки компонента (для реакта)"""
+        self.should_be(Visible).element('[name="$$wasaby$async$loading"]').should_not_be(
+            Present, msg="Компонент не загрузился")
