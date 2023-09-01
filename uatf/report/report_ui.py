@@ -1,13 +1,12 @@
-import datetime
 import hashlib
 import os
 import string
 from ..report.db.db_model_ui import ResultBDUI
 from .. import Config, log
-from ..helper import save_artifact, get_artifact_path
+from ..helper import save_artifact
 from ..ui.screen_capture import make_gif, make_video
-from string import Template
 from ..ui.browser import Browser
+from ..report.report_base import ReporBase
 
 bd = ResultBDUI()
 config = Config()
@@ -31,13 +30,14 @@ with open(get_tpl_path("ui_report.js")) as stpl:
     template_js = string.Template(stpl.read())
 
 
-class ReportUI:
+class ReportUI(ReporBase):
     """Класс для создания отчета"""
 
     def __init__(self, driver=None, file_name: str = None, suite_name: str = None, test_name: str = None,
                  status: str = None,
                  std_out: str = None, start_time: str = None,
                  stop_time: str = None, description: str = None, fail_screen: str = None, test_logs: str = None):
+        super().__init__()
         self.file_name = file_name
         self.suite_name = suite_name
         self.test_name = test_name
@@ -62,7 +62,7 @@ class ReportUI:
         elif config.get('SCREEN_CAPTURE', 'GENERAL') == 'video' or config.get('SCREEN_CAPTURE',
                                                                               'GENERAL') == 'video_present':
             gif_path, img_path = self.generate_video()
-        if self.status == 'failed' or config.get('SCREEN_CAPTURE','GENERAL') == 'video_present':
+        if self.status == 'failed' or config.get('SCREEN_CAPTURE', 'GENERAL') == 'video_present':
             logs_file_path = self.save_test_logs()
         bd.save_test_result(self.file_name, self.suite_name, self.test_name, self.status, self.start_time,
                             self.stop_time, self.std_out, img_path, gif_path, self.description, logs_file_path)
@@ -110,22 +110,6 @@ class ReportUI:
         with open('artifact/report.js', 'w') as style:
             style.write(template_js.template)
 
-    def change_std_out(self, std_out: str):
-        """формируем кусок html-отчета в кликабельными ссылками"""
-
-        new_std_out = ''
-        std_lst = std_out.split('\n')
-        for row in std_lst:
-            if '^' in row:
-                continue
-            if std_lst.index(row) in [1, 3, 6]:
-                _ = row.split()
-                file_path = f"""{_[1].split(' ')[-1].replace('"', '')[:-1]}:{_[-3][:-1]}"""
-                new_std_out = new_std_out + f'<pre>  {_[0][:7]} <a href="http://localhost:63342/api/file/{file_path}">{file_path}</a> {_[-2]} {_[-1]}</pre>\n'
-            else:
-                new_std_out = new_std_out + f'<pre>{row}</pre>\n'
-        return new_std_out
-
     def generate_gif(self):
         """Генерируем GIF"""
 
@@ -137,19 +121,6 @@ class ReportUI:
 
         vedeo_path, last_img = make_video()
         return vedeo_path, last_img
-
-    @staticmethod
-    def load_template(template_name):
-        """Загружаем шаблон"""
-
-        lib_path = os.path.split(__file__)[0]
-        file = os.path.join(lib_path, 'templates', template_name)
-        if os.path.isfile(file):
-            with open(file, encoding='utf-8') as file:
-                data = file.read()
-            return Template(data)
-        else:
-            raise FileNotFoundError('Не найден файл шаблона: %s' % os.path.abspath(file))
 
     def generate_console_error(self):
         """Выводим доп информацию о падении"""
@@ -179,14 +150,3 @@ class ReportUI:
             return _http
         else:
             return file_name
-
-    def save_test_logs(self):
-        """Сохраняем тестовые логи"""
-
-        file_name = f"{self.file_name}_{self.suite_name}_{self.test_name}_{datetime.datetime.now().strftime('%d_%m_%Y_%H_%M')}.txt"
-        path = os.path.join(get_artifact_path('tests_logs'), file_name)
-
-        with open(path, 'w', encoding='utf-8') as file:
-            file.write(self.test_logs + '\n\n')
-            file.write(self.std_out)
-        return path
