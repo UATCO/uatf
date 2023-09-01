@@ -1,4 +1,4 @@
-from .db_base import DBBase
+from ...report.db.db_base import DBBase
 
 
 class ResultBDUI(DBBase):

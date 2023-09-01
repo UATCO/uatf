@@ -13,7 +13,7 @@ import pytest
 from .cache import CacheResults
 from .logfactory import log
 
-from uatf import Config
+from . import Config
 
 
 def get_pytest_run_command():
@@ -227,10 +227,10 @@ class RunTests:
         self.cache.init(self._start_failed)
 
         if self.config.get('CREATE_REPORT_UI', 'GENERAL'):
-            from .report.db_model_ui import ResultBDUI
+            from .report.db.db_model_ui import ResultBDUI
             ResultBDUI().setup()
         elif self.config.get('CREATE_REPORT_LAYOUT', 'GENERAL'):
-            from .report.db_model_layout import ResultBDLayout
+            from .report.db.db_model_layout import ResultBDLayout
             ResultBDLayout().setup()
 
         self._generate_list_of_file_for_run()

@@ -1,8 +1,8 @@
 import os
 import string
 
-from uatf import Config
-from uatf.report.db_model_ui import ResultBDUI
+from .. import Config
+from ..report.db.db_model_ui import ResultBDUI
 
 bd = ResultBDUI()
 config = Config()
