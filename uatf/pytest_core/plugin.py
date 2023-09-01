@@ -2,14 +2,17 @@ import collections
 from datetime import datetime
 from typing import List, Union
 
+from _pytest._code import ExceptionInfo
 from _pytest.config.argparsing import Parser
 import pytest
 from _pytest.main import Session
 from _pytest.reports import TestReport
 from _pytest.runner import CallInfo
 from ..report.report_ui import ReportUI
+from ..report.report_layout import ReportLayout
 from ..logfactory import log
 from ..config import Config
+from ..ui.layout.main import RegressionError
 
 Report = collections.namedtuple('Report', ('file_name', 'suite_name', 'test_name', 'status'))
 REPORT_LIST: List[Report] = []
@@ -23,11 +26,13 @@ class Status:
     SKIPPED = 4
     SKIPPED_JC = 5
 
+
 def strip_doc(description):
     doc = description or ''
     if doc:
         doc = doc.replace(':return:', '').strip()
     return doc
+
 
 def pytest_runtest_protocol(item, nextitem):
     """
@@ -77,6 +82,9 @@ def pytest_runtest_makereport(item: pytest.Item, call: CallInfo[None]):
     report: TestReport = outcome.get_result()
 
     if report.when == 'call':
+        exc_info: ExceptionInfo = call.excinfo
+        is_layout = isinstance(exc_info.value, RegressionError)
+
         log('Создаем отчет прохождения теста')
         cls = item.getparent(pytest.Class)
         suite = cls.obj
@@ -84,16 +92,31 @@ def pytest_runtest_makereport(item: pytest.Item, call: CallInfo[None]):
 
         start_time = datetime.fromtimestamp(call.start).strftime('%d.%m.%y %H:%M:%S')
         stop_time = datetime.fromtimestamp(call.stop).strftime('%d.%m.%y %H:%M:%S')
-        report_ui = ReportUI(driver=driver, file_name=item.parent.parent.name, suite_name=item.parent.name,
-                               test_name=item.name,
-                               status=report.outcome, std_out=report.longreprtext, start_time=start_time,
-                               stop_time=stop_time, description=strip_doc(item.obj.__doc__), test_logs=report.caplog)
-        if Config().get('CREATE_REPORT_UI', 'GENERAL'):
-            report_ui.save_test_result()
-        report_ui.generate()
+        if not is_layout:
+            report_test = ReportUI(driver=driver, file_name=item.parent.parent.name, suite_name=item.parent.name,
+                                   test_name=item.name,
+                                   status=report.outcome, std_out=report.longreprtext, start_time=start_time,
+                                   stop_time=stop_time, description=strip_doc(item.obj.__doc__),
+                                   test_logs=report.caplog)
+        else:
+            report_test = ReportLayout(file_name=item.parent.parent.name, suite_name=item.parent.name,
+                                       test_name=item.nodeid.split('::')[-1],
+                                       status=report.outcome, std_out=report.longreprtext, start_time=start_time,
+                                       stop_time=stop_time, description=strip_doc(item.obj.__doc__),
+                                       test_logs=report.caplog,
+                                       dif_path=exc_info.value.diff, cur_path=exc_info.value.current,
+                                       ref_path=exc_info.value.standard)
+        if (Config().get('CREATE_REPORT_UI', 'GENERAL') or
+                Config().get('CREATE_REPORT_LAYOUT', 'GENERAL')):
+            report_test.save_test_result()
+
+        # TODO убрать когда в ReportLayout реализуем аналогчиный метод
+        if not is_layout:
+            report_test.generate()
         mini_report = Report(item.parent.parent.name, item.parent.name, item.name, report.outcome)
 
         REPORT_LIST.append(mini_report)
+
 
 def pytest_sessionfinish(session: Session, exitstatus: Union[int, pytest.ExitCode]):
     from ..cache import CacheResults

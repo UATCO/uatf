@@ -1,38 +1,29 @@
-import os
 import string
 
-from .. import Config
-from ..report.db.db_model_ui import ResultBDUI
+from .report_base import ReporBase, get_tpl_path, config
+from ..report.db.db_model_layout import ResultBDLayout
 
-bd = ResultBDUI()
-config = Config()
+bd = ResultBDLayout()
 
-
-def get_tpl_path(file_name: str):
-    """Получаем путь до шаблонов"""
-
-    lib_path = os.path.split(__file__)[0]
-    file = os.path.join(lib_path, 'templates', file_name)
-    return file
-
-
-with open(get_tpl_path("report_layout/template_ui.html")) as tpl:
+with open(get_tpl_path("report_layout/template_layout.html")) as tpl:
     template = string.Template(tpl.read())
 
-# with open(get_tpl_path("style_ui.css")) as stpl:
-#     template_css = string.Template(stpl.read())
-#
+with open(get_tpl_path("report_layout/style_layout.css")) as stpl:
+    template_css = string.Template(stpl.read())
+
 with open(get_tpl_path("ui_report.js")) as stpl:
     template_js = string.Template(stpl.read())
 
 
-class ReportLayout:
+class ReportLayout(ReporBase):
     """Класс для создания отчета тестов верстки"""
 
     def __init__(self, file_name: str = None, suite_name: str = None, test_name: str = None,
                  status: str = None,
                  std_out: str = None, start_time: str = None,
-                 stop_time: str = None, description: str = None, test_logs: str = None):
+                 stop_time: str = None, description: str = None, test_logs: str = None, dif_path: str = None,
+                 cur_path: str = None, ref_path: str = None):
+        super().__init__()
         self.file_name = file_name
         self.suite_name = suite_name
         self.test_name = test_name
@@ -42,3 +33,17 @@ class ReportLayout:
         self.stop_time = stop_time
         self.description = description
         self.test_logs = test_logs
+        self.dif_path = dif_path
+        self.cur_path = cur_path
+        self.ref_path = ref_path
+
+    def save_test_result(self):
+        """Сохраняем тестовые данные в бд"""
+
+        logs_file_path = ''
+
+        if self.status == 'failed' or config.get('SCREEN_CAPTURE', 'GENERAL') == 'video_present':
+            logs_file_path = self.save_test_logs()
+        bd.save_test_result(self.file_name, self.suite_name, self.test_name, self.status, self.start_time,
+                            self.stop_time, self.std_out, self.description, logs_file_path, self.dif_path,
+                            self.cur_path, self.ref_path)

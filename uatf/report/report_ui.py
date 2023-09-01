@@ -1,24 +1,13 @@
 import hashlib
-import os
 import string
 from ..report.db.db_model_ui import ResultBDUI
 from .. import Config, log
 from ..helper import save_artifact
 from ..ui.screen_capture import make_gif, make_video
 from ..ui.browser import Browser
-from ..report.report_base import ReporBase
+from ..report.report_base import ReporBase, get_tpl_path, config
 
 bd = ResultBDUI()
-config = Config()
-
-
-def get_tpl_path(file_name: str):
-    """Получаем путь до шаблонов"""
-
-    lib_path = os.path.split(__file__)[0]
-    file = os.path.join(lib_path, 'templates', file_name)
-    return file
-
 
 with open(get_tpl_path("report_ui/template_ui.html")) as tpl:
     template = string.Template(tpl.read())

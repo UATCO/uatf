@@ -6,7 +6,6 @@ from ..report.db.db_model_ui import ResultBDUI
 from .. import Config
 from string import Template
 
-bd = ResultBDUI()
 config = Config()
 
 
