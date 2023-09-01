@@ -48,7 +48,7 @@ class ReportUI:
         self.stop_time = stop_time
         self.driver = driver
         self.description = description
-        self.template_report = self.load_template('report.template')
+        self.template_report = self.load_template('report_ui/report.template')
         self.str_report = None
         self.fail_screen = fail_screen
         self.browser = Browser(self.driver)
@@ -57,7 +57,7 @@ class ReportUI:
     def save_test_result(self):
         """Сохраняем тестовые данные в бд"""
 
-        gif_path = img_path = logs_file_path = ''
+        gif_path = img_path = logs_file_path = layout_files = ''
         if config.get('SCREEN_CAPTURE', 'GENERAL') == 'gif':
             gif_path, img_path = self.generate_gif()
         elif config.get('SCREEN_CAPTURE', 'GENERAL') == 'video' or config.get('SCREEN_CAPTURE',

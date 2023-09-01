@@ -22,14 +22,14 @@ with open(get_tpl_path("report_layout/template_ui.html")) as tpl:
 # with open(get_tpl_path("style_ui.css")) as stpl:
 #     template_css = string.Template(stpl.read())
 #
-# with open(get_tpl_path("ui_report.js")) as stpl:
-#     template_js = string.Template(stpl.read())
+with open(get_tpl_path("ui_report.js")) as stpl:
+    template_js = string.Template(stpl.read())
 
 
 class ReportLayout:
     """Класс для создания отчета тестов верстки"""
 
-    def __init__(self, driver=None, file_name: str = None, suite_name: str = None, test_name: str = None,
+    def __init__(self, file_name: str = None, suite_name: str = None, test_name: str = None,
                  status: str = None,
                  std_out: str = None, start_time: str = None,
                  stop_time: str = None, description: str = None, test_logs: str = None):
@@ -40,6 +40,5 @@ class ReportLayout:
         self.std_out = std_out
         self.start_time = start_time
         self.stop_time = stop_time
-        self.driver = driver
         self.description = description
         self.test_logs = test_logs
