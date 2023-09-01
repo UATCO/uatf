@@ -106,13 +106,3 @@ class CacheResults:
         """Сохранить название вызванного метода и стенд в БД"""
 
         return self.db.save_bl_method(method_name, host)
-
-    def generate_regression_report(self) -> None:
-        if self.config.get('GENERATE_HTML_REPORT', 'REGRESSION'):
-            log('Генерируем отчет тестов вестки')
-            from ..ui.layout.reporter import make_report
-            from ..ui.layout.main import convert_regression_suite_name
-            report_dir = get_artifact_path('regression')
-            flaky_results_db = self.db.get_failed_tests()
-            flaky_nodeid = [f"{convert_regression_suite_name(i[1])}::{i[2]}" for i in flaky_results_db]
-            make_report(report_dir, flaky_nodeid)
