@@ -86,6 +86,8 @@ DEFAULT_VALUES = {
         Option('GENERATE_IMAGE', False, action='store', type=type_bool, help='Генерировать новые эталоны'),
         Option('REGRESSION_THEME', "", action='store', type=str, help='имя темы (пример: "dark_default" для скриншота: '
                                                                       '"chrome_dark_default_1920_1080.png")'),
+        Option('GENERATE_HTML_REPORT', False, action='store', type=type_bool,
+               help='Генерировать ли html отчет по тестам верстки'),
     ],
     'CUSTOM': [
 
