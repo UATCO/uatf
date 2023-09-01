@@ -88,6 +88,8 @@ DEFAULT_VALUES = {
                                                                       '"chrome_dark_default_1920_1080.png")'),
         Option('GENERATE_HTML_REPORT', False, action='store', type=type_bool,
                help='Генерировать ли html отчет по тестам верстки'),
+        Option('COLOR_SPACE', 'lab', action='store', type=str, help='Цветовое пространство в котором сравниваем цвета'),
+
     ],
     'CUSTOM': [
 
