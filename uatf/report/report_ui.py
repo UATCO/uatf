@@ -22,10 +22,10 @@ def get_tpl_path(file_name: str):
     return file
 
 
-with open(get_tpl_path("template_ui.html")) as tpl:
+with open(get_tpl_path("report_ui/template_ui.html")) as tpl:
     template = string.Template(tpl.read())
 
-with open(get_tpl_path("style_ui.css")) as stpl:
+with open(get_tpl_path("report_ui/style_ui.css")) as stpl:
     template_css = string.Template(stpl.read())
 
 with open(get_tpl_path("ui_report.js")) as stpl:
