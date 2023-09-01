@@ -8,7 +8,7 @@ from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
 
 from .base_element import BaseElement, before_after
-from .. import Visible, Present
+from ..should_be import Visible, Present
 from ..actions_chains import ActionChainsUATF
 from ...logfactory import log
 from ...assert_that import *
@@ -690,3 +690,8 @@ class Element(BaseElement):
         """Проверка асинхронной загрузки компонента (для реакта)"""
         self.should_be(Visible).element('[name="$$wasaby$async$loading"]').should_not_be(
             Present, msg="Компонент не загрузился")
+
+    def screenshot_as_png(self) -> bytes:
+        """Возвращает скриншот элемента"""
+
+        return self._exec(lambda: self.webelement().screenshot_as_png)

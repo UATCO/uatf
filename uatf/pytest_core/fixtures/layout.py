@@ -112,7 +112,7 @@ class Layout:
             if element and wait_react_load:
                 element.check_react_async_load()
 
-            capture_delay = self._config.get('CAPTURE_DELAY', 'REGRESSION')
+            capture_delay = int(self._config.get('CAPTURE_DELAY', 'REGRESSION'))
             if capture_delay:
                 delay(capture_delay, 'Задержка перед снятием скриншота')
 

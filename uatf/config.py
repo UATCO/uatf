@@ -76,6 +76,16 @@ DEFAULT_VALUES = {
     ],
     'REGRESSION': [
         Option('COVERAGE', False, action='store', type=type_bool, help='Собирать покрытие JS'),
+        Option('IMAGE_DIR', 'capture', action='store', type=str, help="Папка с эталонами"),
+        Option('TOLERANCE', 2.3, action='store', type=float, help="Максимально допустимая разница между цветами "
+                                                                  "для алогритма CIEDE2000 (lab)"),
+        Option('ANTIALIASING_TOLERANCE', 16, action='store', type=float, help="Максимальная разница между цветами "
+                                                                              "для запуска алгоритма "
+                                                                              "определение сглаживания"),
+        Option('CAPTURE_DELAY', 0, action='store', type=float, help='задержка перед созданием скриншота'),
+        Option('GENERATE_IMAGE', False, action='store', type=type_bool, help='Генерировать новые эталоны'),
+        Option('REGRESSION_THEME', "", action='store', type=str, help='имя темы (пример: "dark_default" для скриншота: '
+                                                                      '"chrome_dark_default_1920_1080.png")'),
     ],
     'CUSTOM': [
 
