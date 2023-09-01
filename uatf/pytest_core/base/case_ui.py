@@ -89,6 +89,9 @@ class TestCaseUI(BaseCaseUI):
         if cls.config.get('CREATE_REPORT_UI', 'GENERAL'):
             from ...report.report_ui import ReportUI
             ReportUI(driver=cls.driver).create_report()
+        elif cls.config.get('CREATE_REPORT_LAYOUT', 'GENERAL'):
+            from ...report.report_layout import ReportLayout
+            ReportLayout().create_report()
 
         log('_teardown_class_framework', '[d]')
         super()._teardown_class_framework()
