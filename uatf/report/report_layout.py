@@ -49,6 +49,19 @@ class ReportLayout(ReporBase):
                             self.stop_time, self.std_out, self.description, logs_file_path, self.dif_path,
                             self.cur_path, self.ref_path)
 
+    def change_std_out(self, std_out: str):
+        """формируем кусок html-отчета в кликабельными ссылками"""
+
+        new_std_out = ''
+        std_lst = std_out.split('\n')
+        rs = bd.get_test_results()
+        for row in std_lst:
+            if rs[0][0] in row:
+                _ = row.split()
+                file_path = f"""{_[1].split(' ')[-1].replace('"', '')[:-1]}:{_[-3][:-1]}"""
+                new_std_out = new_std_out + f'<pre>  {_[0][:7]} <a href="http://localhost:63342/api/file/{file_path}">{file_path}</a> {_[-2]} {_[-1]}</pre>\n'
+        return new_std_out
+
     def create_report(self):
         """Создаем html-отчет"""
 
