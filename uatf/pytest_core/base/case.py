@@ -23,10 +23,10 @@ class TestCase:
         url = cls.config.get('SITE', 'GENERAL')
         assert cls.check_service(url) is True, 'Сервис недоступен'
 
-        if cls.config.get('CREATE_REPORT_DEBUG', 'GENERAL'):
+        if cls.config.get('CREATE_REPORT_DEBUG_UI', 'GENERAL'):
             from ...report.db.db_model_ui import ResultBDUI
             ResultBDUI().setup()
-        elif cls.config.get('CREATE_REPORT_LAYOUT', 'GENERAL'):
+        elif cls.config.get('CREATE_REPORT_DEBUG_LAYOUT', 'GENERAL'):
             from ...report.db.db_model_layout import ResultBDLayout
             ResultBDLayout().setup()
 
