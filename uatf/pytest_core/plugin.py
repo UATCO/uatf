@@ -83,7 +83,10 @@ def pytest_runtest_makereport(item: pytest.Item, call: CallInfo[None]):
 
     if report.when == 'call':
         exc_info: ExceptionInfo = call.excinfo
-        is_layout = isinstance(exc_info.value, RegressionError)
+        if exc_info:
+            is_layout = isinstance(exc_info.value, RegressionError)
+        else:
+            is_layout = False
 
         log('Создаем отчет прохождения теста')
         cls = item.getparent(pytest.Class)
