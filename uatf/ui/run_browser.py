@@ -84,6 +84,7 @@ class RunBrowser:
         if self.config.get('DISABLE_GPU', 'GENERAL') or headless_mode:
             options.add_argument("--disable-gpu")
 
+        log('Запускаем браузер')
         self.driver = webdriver.Chrome(options=options)
         log("BROWSER: Chrome", '[f]')
 
