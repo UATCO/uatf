@@ -3,6 +3,7 @@
 """
 import ntpath
 import os
+import shutil
 import subprocess
 import sys
 from collections import defaultdict
@@ -213,6 +214,11 @@ class RunTests:
             commands.extend(self.options)
 
         log(commands)
+
+        log('Формируем zip артефакт')
+        file_name = shutil.make_archive('artifacts', 'zip', 'artifact')
+        log(file_name)
+
         return subprocess.Popen(commands)
 
     def _basic_run(self) -> None:
