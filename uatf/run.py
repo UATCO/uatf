@@ -1,10 +1,12 @@
 """
 Модуль для запуска тестовых наборов
 """
+import ntpath
 import os
 import subprocess
 import sys
 from collections import defaultdict
+from datetime import datetime
 from fnmatch import fnmatch
 from typing import Dict, Any, List, Union
 
@@ -183,12 +185,21 @@ class RunTests:
         pytest_node_ids_list.extend(full_node_ids_list)
         return pytest_node_ids_list
 
+    @staticmethod
+    def _generate_xml_report_name(file):
+        xml_name = ntpath.splitext(ntpath.basename(file))[0]
+        postfix = datetime.now().strftime('%d%m%y_%H%M%S_%f')
+        return os.path.join('test-reports', f'{xml_name}_{postfix}.xml')
+
     def _run_test(self, test: str, **kwargs: str) -> 'subprocess.Popen':
         """Запускает тестовый набор"""
 
         action = 'RUN' if not self._rerun else 'RERUN'
         log(f"{action} FILE: %s" % test)
         commands = get_pytest_run_command()
+
+        xml_name = self._generate_xml_report_name(test)
+        commands.append(f'--junitxml={xml_name}') #для генерации junit отчета
 
         if self._start_failed:
             commands.append(test)
