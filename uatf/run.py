@@ -242,8 +242,6 @@ class RunTests:
         """Запускает тесты"""
 
         self.cache.init(self._start_failed)
-        #TODO выставлять необходимый параметр в зависимости от ui или layout (возможно стоит чекать наличие слова layout в пути)
-        self.config.set_option('CREATE_REPORT_UI', True, 'GENERAL')
         if self.config.get('CREATE_REPORT_UI', 'GENERAL'):
             from .report.db.db_model_ui import ResultBDUI
             ResultBDUI().setup()
