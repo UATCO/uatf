@@ -45,7 +45,7 @@ class ReportUI(ReporBase):
     def save_test_result(self):
         """Сохраняем тестовые данные в бд"""
 
-        gif_path = img_path = logs_file_path = ''
+        gif_path = img_path = ''
         if config.get('SCREEN_CAPTURE', 'GENERAL') == 'gif':
             gif_path, img_path = self.generate_gif()
         elif config.get('SCREEN_CAPTURE', 'GENERAL') == 'video' or config.get('SCREEN_CAPTURE',

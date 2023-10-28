@@ -215,10 +215,6 @@ class RunTests:
 
         log(commands)
 
-        log('Формируем zip артефакт')
-        file_name = shutil.make_archive('artifacts', 'zip', 'artifact')
-        log(file_name)
-
         return subprocess.Popen(commands)
 
     def _basic_run(self) -> None:
@@ -264,6 +260,10 @@ class RunTests:
                 self._basic_run()
             else:
                 log('Все тесты прошли успешно')
+
+        log('Формируем zip артефакт')
+        file_name = shutil.make_archive('artifacts', 'zip', 'artifact')
+        log(file_name)
 
 
 def main(*args, **kwargs):
