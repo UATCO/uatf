@@ -1,6 +1,8 @@
+import argparse
 import configparser
 import os
-from dataclasses import dataclass
+import sys
+from dataclasses import dataclass, asdict
 from typing import Any, Optional
 from distutils import util
 
@@ -46,8 +48,6 @@ DEFAULT_VALUES = {
                help="Указание модуля для выполнения действий"),
         Option("HIGHLIGHT_ACTION", False, type=type_bool,
                help="подсвечивать или нет элемены при прохождении теста (для наглядности прохождения)"),
-        Option('RESTART_AFTER_BUILD_MODE', False, action='store_true',
-               help='Перезапускать ли упавшие тесты внутри сборки упавших тестов в конце сборки'),
         Option('RERUN', False, action='store_true',
                help='Если это перезапуск упавших тестов внутри RESTART_AFTER_BUILD_MODE'),
         Option("DELAY_ACTION", 0, type=int,
@@ -69,7 +69,7 @@ DEFAULT_VALUES = {
                help='Если надо запустить только упавшие тесты из последнего прогона '
                     'за исключение тестов, подписанных ошибками'),
         Option('CACHE_ENABLE', False, action='store_true', help="Если надо сохранять результаты с БД"),
-        #TODO привести к общему параметру
+        # TODO привести к общему параметру
         Option('CREATE_REPORT_UI', False, type=bool, help='Создавать отчет по пройденным тестам ui?'),
         Option('CREATE_REPORT_LAYOUT', False, type=bool, help='Создавать отчет по пройденным тестам верстки?'),
         Option('CREATE_REPORT_SHOW', False, type=bool, help='Создавать отчет по тестам для клиента?'),
@@ -121,12 +121,55 @@ class Config:
             self.device_name = self.get('BROWSER', 'GENERAL')
             self.GENERAL = self.options.get('GENERAL')
             self.CUSTOM = self.options.get('CUSTOM')
+            self._args = dict()
+            self.init(sys.argv[1:])
 
             if self.get('CREATE_REPORT_SHOW', 'GENERAL'):  # для создания отчета для клиента
                 self.set_option('CREATE_REPORT_UI', True, 'GENERAL')
                 self.set_option('SCREEN_CAPTURE', 'video_present', 'GENERAL')
                 self.set_option('HEADLESS_MODE', True, 'GENERAL')
                 self.set_option('HIGHLIGHT_ACTION', True, 'GENERAL')
+
+    def init(self, args):
+        """Для инициализации вне pytest"""
+        self.parse_args(args)
+        self._read_file()
+        self._set_params_from_command_line()
+
+    @staticmethod
+    def _create_parser():
+        """Создаем парсер для чтения данных из командной строки"""
+
+        parser = argparse.ArgumentParser(description='Задаем параметры тестам',
+                                         add_help=False)
+        parent_group = parser.add_argument_group(title='Параметры')
+        for group in DEFAULT_VALUES.values():
+            for option in group:
+                if option.type or option.action:
+                    option_dict = {k: v for k, v in asdict(option).items() if v is not None}
+                    name = option_dict.pop('name')
+                    parent_group.add_argument(f'--{name}', **option_dict)
+        return parser
+
+    def parse_args(self, args):
+        """Парсим данный командной строки"""
+
+        parser = self._create_parser()
+        options, _ = parser.parse_known_args(args)
+        options_dict = vars(options)
+        default_options = vars(parser.parse_args([]))
+        for k, v in options_dict.items():
+            if v is not default_options[k]:
+                self._args[k] = v
+
+    def _set_params_from_command_line(self):
+        """Устанавливаем значения из командной строки"""
+
+        for name, value in self._args.items():
+            if name in self.options['REGRESSION']:
+                self.set_option(name, value, 'REGRESSION')
+            else:
+                self.set_option(name, value, 'GENERAL')
 
     def _read_file(self):
         """Разбираем config.ini файл"""

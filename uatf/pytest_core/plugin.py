@@ -1,4 +1,5 @@
 import collections
+from dataclasses import asdict
 from datetime import datetime
 from typing import List, Union
 
@@ -11,7 +12,7 @@ from _pytest.runner import CallInfo
 from ..report.report_ui import ReportUI
 from ..report.report_layout import ReportLayout
 from ..logfactory import log
-from ..config import Config
+from ..config import Config, DEFAULT_VALUES
 from ..ui.layout.main import RegressionError
 
 Report = collections.namedtuple('Report', ('file_name', 'suite_name', 'test_name', 'status'))
@@ -67,6 +68,12 @@ def check_success_status(status):
 
 
 def pytest_addoption(parser: Parser):
+    for group in DEFAULT_VALUES.values():
+        for option in group:
+            if option.type or option.action:
+                option_dict = {k: v for k, v in asdict(option).items() if v is not None}
+                name = option_dict.pop('name')
+                parser.addoption(f'--{name}', **option_dict)
     parser.addini('junit_logging', help='', type='string', default='system-out')
     parser.addini('junit_duration_report', help='', type='string', default='total')
     parser.addini('disable_test_id_escaping_and_forfeit_all_rights_to_community_support',
