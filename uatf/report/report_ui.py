@@ -51,8 +51,7 @@ class ReportUI(ReporBase):
         elif config.get('SCREEN_CAPTURE', 'GENERAL') == 'video' or config.get('SCREEN_CAPTURE',
                                                                               'GENERAL') == 'video_present':
             gif_path, img_path = self.generate_video()
-        if self.status == 'failed' or config.get('SCREEN_CAPTURE', 'GENERAL') == 'video_present':
-            logs_file_path = self.save_test_logs()
+        logs_file_path = self.save_test_logs()
         bd.save_test_result(self.file_name, self.suite_name, self.test_name, self.status, self.start_time,
                             self.stop_time, self.std_out, img_path, gif_path, self.description, logs_file_path)
         config.set_option('SCREENSHOT_LIST', [], 'GENERAL')
