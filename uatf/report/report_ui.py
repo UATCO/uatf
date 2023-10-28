@@ -9,7 +9,7 @@ from ..report.report_base import ReporBase, get_tpl_path, config
 
 bd = ResultBDUI()
 
-with open(get_tpl_path("report_ui/template_ui.html")) as tpl:
+with open(get_tpl_path("report_ui/template_ui.html"), encoding='utf-8') as tpl:
     template = string.Template(tpl.read())
 
 with open(get_tpl_path("report_ui/style_ui.css")) as stpl:
@@ -90,7 +90,7 @@ class ReportUI(ReporBase):
         </tr>\n"""
 
         final_output = template.safe_substitute(content=content)
-        with open("artifact/report.html", "w") as output:
+        with open("artifact/report.html", "w", encoding='utf-8') as output:
             output.write(final_output)
 
         with open('artifact/style.css', 'w') as style:
