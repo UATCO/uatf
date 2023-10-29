@@ -59,7 +59,7 @@ class ReportUI(ReporBase):
     def create_report(self):
         """Создаем html-отчет"""
 
-        content = ''
+        content = product_name = ''
         rs = bd.get_test_results()
         for (file_name, suite_name, test_name, status, start_time, stop_time, std_out, img_path, gif_path,
              description, logs_file_path) in rs:
@@ -88,7 +88,7 @@ class ReportUI(ReporBase):
             
         </tr>\n"""
 
-        final_output = template.safe_substitute(content=content)
+        final_output = template.safe_substitute(content=content, product_name=self.product_name)
         with open("artifact/report.html", "w", encoding='utf-8') as output:
             output.write(final_output)
 

@@ -33,6 +33,7 @@ class ReporBase:
         self.stop_time = stop_time
         self.description = description
         self.test_logs = test_logs
+        self.product_name = None
 
     def change_std_out(self, std_out: str):
         """формируем кусок html-отчета в кликабельными ссылками"""
@@ -73,3 +74,8 @@ class ReporBase:
             file.write(self.test_logs + '\n\n')
             file.write(self.std_out)
         return path.split('artifact')[1][1:]
+
+    def get_product_name(self):
+        """Получаем имя продукта"""
+
+        self.product_name = config.get('WORKSPACE', 'GENERAL').split('workspace')[-1].split('\\')[0]
