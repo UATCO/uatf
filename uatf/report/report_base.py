@@ -72,4 +72,4 @@ class ReporBase:
         with open(path, 'w', encoding='utf-8') as file:
             file.write(self.test_logs + '\n\n')
             file.write(self.std_out)
-        return path.split('artifact')[1]
+        return path.split('artifact')[1][1:]
