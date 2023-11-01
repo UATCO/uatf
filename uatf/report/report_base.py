@@ -42,7 +42,7 @@ class ReporBase:
         for row in std_lst:
             if '^' in row:
                 continue
-            if std_lst.index(row) in [1, 3, 6]:
+            if std_lst.index(row) in [1, 3, 5]:
                 _ = row.split()
                 file_path = f"""{_[1].split(' ')[-1].replace('"', '')[:-1]}:{_[-3][:-1]}"""
                 new_std_out = new_std_out + f'<pre>  {_[0][:7]} <a href="http://localhost:63342/api/file/{file_path}">{file_path}</a> {_[-2]} {_[-1]}</pre>\n'
@@ -73,3 +73,10 @@ class ReporBase:
             file.write(self.test_logs + '\n\n')
             file.write(self.std_out)
         return path.split('artifact')[1][1:]
+
+    def get_product_name(self):
+        """Получаем имя продукта"""
+
+        workspace = config.get('WORKSPACE', 'GENERAL')
+        product_name = workspace.split('workspace')[-1].split('\\')[1] if bool(workspace) else ''
+        return product_name

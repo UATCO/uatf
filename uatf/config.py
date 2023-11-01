@@ -76,6 +76,7 @@ DEFAULT_VALUES = {
         Option('CREATE_REPORT_DEBUG_UI', False, type=bool, help='Для создания отчета при локальном прогоне ат'),
         Option('CREATE_REPORT_DEBUG_LAYOUT', False, type=bool,
                help='Для создания отчета верстки при локальном прогоне ат'),
+        Option('WORKSPACE', '', type=str, action="store", help='Путь до сборки (для получения имени продукта)')
 
     ],
     'REGRESSION': [

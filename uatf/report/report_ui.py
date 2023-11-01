@@ -59,7 +59,7 @@ class ReportUI(ReporBase):
     def create_report(self):
         """Создаем html-отчет"""
 
-        content = ''
+        content = product_name = ''
         rs = bd.get_test_results()
         for (file_name, suite_name, test_name, status, start_time, stop_time, std_out, img_path, gif_path,
              description, logs_file_path) in rs:
@@ -87,8 +87,8 @@ class ReportUI(ReporBase):
             {'<td></td>' if status == 'passed' and not Config().get('CREATE_REPORT_SHOW', 'GENERAL') else f'<td><a href={gif_path}><img src={img_path} alt="Видео падения"></a></td>'}
             
         </tr>\n"""
-
-        final_output = template.safe_substitute(content=content)
+        product_name = self.get_product_name()
+        final_output = template.safe_substitute(content=content, product_name=product_name)
         with open("artifact/report.html", "w", encoding='utf-8') as output:
             output.write(final_output)
 
