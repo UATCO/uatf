@@ -80,4 +80,6 @@ class ReporBase:
         workspace = config.get('WORKSPACE', 'GENERAL')
         print(f'ПУТЬ СБОРКИ: {workspace}')
         product_name = workspace.split('workspace')[-1].split('\\')[0] if bool(workspace) else ''
+        print(f'САТУС: {bool(workspace)}')
+        print(f'Продукт: {workspace}')
         return product_name
