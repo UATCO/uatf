@@ -88,7 +88,6 @@ class ReportUI(ReporBase):
             
         </tr>\n"""
         product_name = self.get_product_name()
-        # log(f'ПРОДУКТ: {config.get("WORKSPACE", "GENERAL")}')
         final_output = template.safe_substitute(content=content, product_name=product_name)
         with open("artifact/report.html", "w", encoding='utf-8') as output:
             output.write(final_output)
