@@ -81,5 +81,6 @@ class ReporBase:
         print(f'ПУТЬ СБОРКИ: {workspace}')
         product_name = workspace.split('workspace')[-1].split('\\')[0] if bool(workspace) else ''
         print(f'САТУС: {bool(workspace)}')
-        print(f'Продукт: {workspace}')
+        print(workspace.split('workspace')[-1].split('\\'))
+        print(f'Продукт: {product_name}')
         return product_name
