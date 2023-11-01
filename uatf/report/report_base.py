@@ -68,7 +68,8 @@ class ReporBase:
 
         file_name = f"{self.file_name}_{self.suite_name}_{self.test_name}_{datetime.datetime.now().strftime('%d_%m_%Y_%H_%M')}.txt"
         path = os.path.join(get_artifact_path('tests_logs'), file_name)
-        print(f'ЛОГ ПУТЬ: {path}')
+        print(f'НАЗВАНИЕ ФАЙЛА: {file_name}')
+        print("ПУТЬ ДО АКРТИФАКТОВ: {get_artifact_path('tests_logs')}")
         with open(path, 'w', encoding='utf-8') as file:
             file.write(self.test_logs + '\n\n')
             file.write(self.std_out)
