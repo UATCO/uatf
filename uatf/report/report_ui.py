@@ -1,4 +1,5 @@
 import hashlib
+import shutil
 import string
 from ..report.db.db_model_ui import ResultBDUI
 from .. import Config, log
@@ -17,6 +18,9 @@ with open(get_tpl_path("report_ui/style_ui.css")) as stpl:
 
 with open(get_tpl_path("ui_report.js")) as stpl:
     template_js = string.Template(stpl.read())
+
+with open(get_tpl_path("converter.py")) as stpl:
+    convert_file = string.Template(stpl.read())
 
 
 class ReportUI(ReporBase):
@@ -97,6 +101,9 @@ class ReportUI(ReporBase):
 
         with open('artifact/report.js', 'w') as style:
             style.write(template_js.template)
+
+        with open('artifact/converter.py', 'w') as style:
+            style.write(convert_file.template)
 
     def generate_gif(self):
         """Генерируем GIF"""
