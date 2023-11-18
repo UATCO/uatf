@@ -103,7 +103,7 @@ def pytest_runtest_makereport(item: pytest.Item, call: CallInfo[None]):
         start_time = datetime.fromtimestamp(call.start).strftime('%d.%m.%y %H:%M:%S')
         stop_time = datetime.fromtimestamp(call.stop).strftime('%d.%m.%y %H:%M:%S')
         if not is_layout:
-            report_test = ReportUI(driver=driver, file_name=item.parent.parent.name, suite_name=item.parent.name,
+            report_test = ReportUI(driver=driver, file_name=item.parent.parent.name.split('/')[-1], suite_name=item.parent.name,
                                    test_name=item.name,
                                    status=report.outcome, std_out=report.longreprtext, start_time=start_time,
                                    stop_time=stop_time, description=strip_doc(item.obj.__doc__),
