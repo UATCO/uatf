@@ -414,7 +414,7 @@ class NotEqual(BaseMatcher):
         type2 = type(item2)
         arg1 = self.cut('arg1 (%s) = %s' % (type1, item1))
         arg2 = self.cut('arg2 (%s) = %s' % (type2, item2))
-        description = '\nПроверялось НЕравенство: \n%s\n%s' % (arg1, arg2)
+        description = '\nПроверялось НЕ равенство: \n%s\n%s' % (arg1, arg2)
         return [result, description]
 
 

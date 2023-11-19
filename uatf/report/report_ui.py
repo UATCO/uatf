@@ -114,8 +114,8 @@ class ReportUI(ReporBase):
     def generate_video(self):
         """Генерируем видео падения"""
 
-        vedeo_path, last_img = make_video()
-        return vedeo_path, last_img
+        video_path, last_img = make_video()
+        return video_path.split('artifact')[1][1:], last_img.split('artifact')[1][1:]
 
     def generate_console_error(self):
         """Выводим доп информацию о падении"""
